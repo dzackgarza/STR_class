@@ -6,6 +6,9 @@
     September 12, 2013
 
 *****************************************************/
+#ifndef MY_STRING_CLASS_H
+#define MY_STRING_CLASS_H
+#endif
 
 const unsigned MAX_STR_LENGTH = 0;
 // Class Invariants: //
@@ -14,7 +17,7 @@ const unsigned MAX_STR_LENGTH = 0;
 
 class STRING {
     unsigned len;
-    char contents[];
+    char* contents;
     public:
 
 
@@ -34,7 +37,7 @@ STRING();
 // Pre:
 // Post:
 //
-STRING(char*);
+STRING(const char*);
 // This constructor will take a char* and use it to initialize the
 // STRING.
 /**********************************************/
@@ -44,7 +47,7 @@ STRING(char*);
 // Pre:
 // Post:
 //
-STRING(char);
+STRING(const char);
 // This constructor will take a char and use it to initialize the
 // STRING.
 /**********************************************/
@@ -105,7 +108,7 @@ STRING& operator = (const STRING &right_argument);
 // Pre:
 // Post:
 //
-unsigned position(char);
+int position(const char);
 // This will return the position of the first occurrence of char in
 // the STRING as an int. Returns -1 if the char is not in the STRING.
 /**********************************************/
@@ -204,7 +207,7 @@ friend std::istream& operator >> (std::istream &in, const STRING &right_argument
 // Pre:
 // Post:
 //
-friend bool operator == (const STRING &left_argument, const STRING &right_argument);
+bool operator == (const STRING &right_argument);
 // Comparison ( == ) operator;
 // (see note below for all comparison operators)
 /**********************************************/
@@ -296,4 +299,7 @@ friend STRING& operator + (const STRING &left_argument, const STRING &right_argu
 // This will cast our STRING to a float if possible. It will
 // return 0 if unsuccessful.
 /**********************************************/
+
+// Helper Functions //
+friend void STRdisplay(const STRING&);
 };

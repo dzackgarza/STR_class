@@ -9,72 +9,84 @@
 
 #include <iostream>
 #include "MyString.h"
+
 using namespace std;
-
-/*****************************************************
-
-    Zack Garza
-    CISP 430 - TTH 5:30 pm
-    Programming Project 2 - Classes
-    September 12, 2013
-
-*****************************************************/
 
 //          Constructors / Destructor               //
 /****************************************************/
+
+// This constructor will initialize an empty STRING.
 STRING::STRING()
 {
-
+    this->len = 0;
+    contents = new char[0];
 }
-// This constructor will initialize an empty STRING.
 
-
-STRING::STRING(char*)
-{
-
-}
 // This constructor will take a char* and use it to initialize the
 // STRING.
-
-
-STRING::STRING(char)
+STRING::STRING(const char* cstr)
 {
+    unsigned i = 0;
+    unsigned cstrLength = 0;
 
+    // Count the characters in cstr to find the minimum amount of memory necessary.
+    while (cstr[i] != '\0')
+    {
+        cstrLength++; i++;
+    }
+    contents = new char[cstrLength];
+    this->len = cstrLength;
+
+    // Letter by letter assignment
+    for (i = 0; i < cstrLength; i++)
+    {
+        this->contents[i] = cstr[i];
+    }
 }
+
+
 // This constructor will take a char and use it to initialize the
 // STRING.
-
-
-STRING::STRING(const STRING&)
+STRING::STRING(const char c)
 {
-
+    this->len = 1;
+    contents = new char[this->len];
+    this->contents[0] = c;
 }
+
+
 // This constructor will take a STRING and use it to initialize
 // the STRING. This is called the copy constructor.
+STRING::STRING(const STRING& s)
+{
+    this->len = s.len;
+    contents = new char[s.len];
+    for (unsigned i = 0; i < s.len; i++)
+    {
+        this->contents[i] = s.contents[i];
+    }
+}
 
 
+// The destructor.
 STRING::~STRING()
 {
-
+    //delete[] contents;
 }
-// The destructor.
 
 
 
 //                  Member Functions                //
 /****************************************************/
+
+// This will return the number of characters in the STRING.
 unsigned STRING::length()
 {
-
+    return this->len;
 }
-// This will return the number of characters in the STRING.
 
 
 // Assignment ( = ) operator
-STRING& STRING::operator = (const STRING &right_argument)
-{
-
-}
 // This operator assigns one STRING to another.
     // if (this == &right_argument)
     //  return *this{}
@@ -82,120 +94,133 @@ STRING& STRING::operator = (const STRING &right_argument)
     // 2.  Allocate some memory to hold the contents of rhs
     // 3.  Copy the values from rhs into this instance
     // 4.  Return *this
-
-
-unsigned STRING::position(char)
+STRING& STRING::operator = (const STRING &right_argument)
 {
 
 }
+
+
 // This will return the position of the first occurrence of char in
 // the STRING as an int. Returns -1 if the char is not in the STRING.
+int STRING::position(const char c)
+{
+    for (unsigned i = 0; i <= this->len; i++)
+    {
+        if (contents[i] == c) return i;
+    }
+    // Character not found.
+    return -1;
+}
 
 
+// Immediate concatenation ( += ) operator{}
+// This operator will be overloaded to
+// work with a right hand value of either type STRING, type char* or type char.
 STRING& STRING::operator += (const STRING &right_argument)
 {
 
 }
-// Immediate concatenation ( += ) operator{}
-// This operator will be overloaded to
-// work with a right hand value of either type STRING, type char* or type char.
 
 
-char STRING::operator [] (const STRING &right_argument)
-{
-
-}
 // Index ( [ ] ) operator{}
 // This operator returns one character through indexing. An
 // error is handled if the index is out of range. This is to be overloaded with a
 // const and non-const version.
 // Bounds checks must be done on these to make sure this index is in range.
-
-
-void STRING::upcase(unsigned first, unsigned last)
+char STRING::operator [] (const STRING &right_argument)
 {
 
 }
+
+
 // This function will change all
 // alphabetic characters to upper case.
 // Functions 11,12, & 13 will work on the character at index first through, but not including, the character at index
 // last. Bounds checks must be done on these to make sure they are in range.
+void STRING::upcase(unsigned first, unsigned last)
+{
+
+}
 
 
+// This function will change
+// all alphabetic characters to lower case.
 void STRING::downcase(unsigned first, unsigned last)
 {
 
 }
-// This function will change
-// all alphabetic characters to lower case.
 
 
+// This function will
+// change the case of all alphabetic characters.
 void STRING::togglecase(unsigned first, unsigned last)
 {
 
 }
-// This function will
-// change the case of all alphabetic characters.
+
 
 
 //               Comparison / Friend Functions      //
 /****************************************************/
-std::ostream& operator << (ostream &out, const STRING &right_argument)
-{
-}
+
 // Output stream ( << ) operator{}
 // This operator will return an ostream.
-
-std::istream& operator >> (istream &in, const STRING &right_argument)
+std::ostream& operator << (ostream &out, const STRING &right_argument)
 {
+
 }
+
 
 // Input stream ( >> ) operator{}
 // This operator will return an istream.
-
-// STRING& STRING::operator == (const STRING &right_argument)
-bool operator == (const STRING &left_argument, const STRING &right_argument)
+std::istream& operator >> (istream &in, const STRING &right_argument)
 {
 
 }
+
+
 // Comparison ( == ) operator{}
 // (see note below for all comparison operators)
+bool STRING::operator == (const STRING &left_argument)
+{
 
+}
+
+// Comparison ( != ) operator{}
 bool operator != (const STRING &left_argument, const STRING &right_argument)
 {
 
 }
-// Comparison ( != ) operator{}
 
+// Comparison ( > ) operator{}
 bool operator > (const STRING &left_argument, const STRING &right_argument)
 {
 
 }
-// Comparison ( > ) operator{}
 
+// Comparison ( < ) operator{}
 bool operator < (const STRING &left_argument, const STRING &right_argument)
 {
 
 }
-// Comparison ( < ) operator{}
 
+// Comparison ( <= ) operator{}
 bool operator <= (const STRING &left_argument, const STRING &right_argument)
 {
 
 }
-// Comparison ( <= ) operator{}
 
+// Comparison ( >= ) operator{}
 bool operator >= (const STRING &left_argument, const STRING &right_argument)
 {
 
 }
-// Comparison ( >= ) operator{}
 
+// Concatenation ( + ) operator{}
 STRING& operator + (const STRING &left_argument, const STRING &right_argument)
 {
 
 }
-// Concatenation ( + ) operator{}
 
 
 //               Extra Credit Functions             //
@@ -210,3 +235,12 @@ STRING& operator + (const STRING &left_argument, const STRING &right_argument)
 // STRING& STRING::operator float(const STRING &left_argument, const STRING &right_argument){}
 // This will cast our STRING to a float if possible. It will
 // return 0 if unsuccessful.
+
+// Helper Functions //
+void STRdisplay(const STRING& s)
+{
+    for (unsigned i = 0; i < s.len; i++)
+    {
+        cout << s.contents[i];
+    }
+}
