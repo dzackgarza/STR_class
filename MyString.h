@@ -10,7 +10,6 @@
 #define MY_STRING_CLASS_H
 #endif
 
-const unsigned MAX_STR_LENGTH = 0;
 // Class Invariants: //
 
 
@@ -84,7 +83,7 @@ STRING(const STRING&);
 // Pre:
 // Post:
 //
-unsigned length();
+unsigned length() const;
 // This will return the number of characters in the STRING.
 /**********************************************/
 
@@ -129,7 +128,7 @@ STRING& operator += (const STRING &right_argument);
 // Pre:
 // Post:
 //
-char operator [] (const STRING &right_argument);
+int operator [] (const int index);
 // Index ( [ ] ) operator;
 // This operator returns one character through indexing. An
 // error is handled if the index is out of range. This is to be overloaded with a
@@ -207,7 +206,7 @@ friend std::istream& operator >> (std::istream &in, const STRING &right_argument
 // Pre:
 // Post:
 //
-bool operator == (const STRING &right_argument);
+bool operator == (const STRING &right_argument) const;
 // Comparison ( == ) operator;
 // (see note below for all comparison operators)
 /**********************************************/
@@ -217,7 +216,7 @@ bool operator == (const STRING &right_argument);
 // Pre:
 // Post:
 //
-friend bool operator != (const STRING &left_argument, const STRING &right_argument);
+friend bool operator != (const STRING &right_argument, const STRING &left_argument);
 // Comparison ( != ) operator;
 /**********************************************/
 
@@ -262,7 +261,7 @@ friend bool operator >= (const STRING &left_argument, const STRING &right_argume
 // Pre:
 // Post:
 //
-friend STRING& operator + (const STRING &left_argument, const STRING &right_argument);
+STRING operator + (const STRING &right_argument);
 // Concatenation ( + ) operator;
 /**********************************************/
 

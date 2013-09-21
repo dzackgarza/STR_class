@@ -71,7 +71,7 @@ STRING::STRING(const STRING& s)
 // The destructor.
 STRING::~STRING()
 {
-    //delete[] contents;
+    delete[] contents;
 }
 
 
@@ -80,7 +80,7 @@ STRING::~STRING()
 /****************************************************/
 
 // This will return the number of characters in the STRING.
-unsigned STRING::length()
+unsigned STRING::length() const
 {
     return this->len;
 }
@@ -127,9 +127,10 @@ STRING& STRING::operator += (const STRING &right_argument)
 // error is handled if the index is out of range. This is to be overloaded with a
 // const and non-const version.
 // Bounds checks must be done on these to make sure this index is in range.
-char STRING::operator [] (const STRING &right_argument)
+int STRING::operator [] (const int index)
 {
-
+    if (index >= this->len || index < 0) return -1;
+    else return this->contents[index];
 }
 
 
@@ -167,7 +168,11 @@ void STRING::togglecase(unsigned first, unsigned last)
 // This operator will return an ostream.
 std::ostream& operator << (ostream &out, const STRING &right_argument)
 {
-
+    for (unsigned i = 0; i < right_argument.len; i++)
+    {
+        out << right_argument.contents[i];
+    }
+    return out;
 }
 
 
@@ -175,21 +180,30 @@ std::ostream& operator << (ostream &out, const STRING &right_argument)
 // This operator will return an istream.
 std::istream& operator >> (istream &in, const STRING &right_argument)
 {
-
+    for (unsigned i = 0; i < right_argument.len; i++)
+    {
+        in >> right_argument.contents[i];
+    }
+    return in;
 }
 
 
 // Comparison ( == ) operator{}
 // (see note below for all comparison operators)
-bool STRING::operator == (const STRING &left_argument)
+bool STRING::operator == (const STRING &left_argument) const
 {
-
+    if  (this->len != left_argument.len) return false;
+    for (unsigned i = 0; i < this->len; i++)
+    {
+        if (this->contents[i] != left_argument.contents[i]) return false;
+    }
+    return true;
 }
 
 // Comparison ( != ) operator{}
 bool operator != (const STRING &left_argument, const STRING &right_argument)
 {
-
+    return !(left_argument == right_argument);
 }
 
 // Comparison ( > ) operator{}
@@ -217,9 +231,26 @@ bool operator >= (const STRING &left_argument, const STRING &right_argument)
 }
 
 // Concatenation ( + ) operator{}
-STRING& operator + (const STRING &left_argument, const STRING &right_argument)
+STRING STRING::operator + (const STRING &right_argument)
 {
+    unsigned right_arg_length = right_argument.length();
+    unsigned left_arg_length = this->length();
+    unsigned newSTRlen = left_arg_length + right_arg_length;
 
+    STRING temp;
+    temp.contents = new char[newSTRlen];
+    temp.len = newSTRlen;
+
+    for (unsigned i = 0; i < left_arg_length; i++)
+    {
+        temp.contents[i] = this->contents[i];
+    }
+
+    for (unsigned i = 0; i < right_arg_length; i++)
+    {
+        temp.contents[i + left_arg_length] = right_argument.contents[i];
+    }
+    return temp;
 }
 
 

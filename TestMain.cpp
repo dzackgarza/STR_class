@@ -23,6 +23,14 @@ void testCharStarConst();
 void printTestHeader(char testName[]);
 void printTestFooter(char testName[]);
 
+void oStreamTest();
+void iStreamTest();
+void comparisonOpTest();
+void notEqualOpTest();
+void plusOpTest();
+void indexTest();
+
+
 int main()
 {
     cout << "Running Tests";
@@ -35,6 +43,12 @@ void runtests()
     testEmptyConst();
     testSingleCharConst();
     testCharStarConst();
+    oStreamTest();
+    iStreamTest();
+    comparisonOpTest();
+    notEqualOpTest();
+    plusOpTest();
+    indexTest();
 }
 
 void testEmptyConst()
@@ -73,6 +87,86 @@ void testCharStarConst()
     cout << "The contents of the C-String are: \n\t'" << cstr << "'.\n";
     STRING s (cstr);
     cout << "The contents of STRING are: \n\t'"; STRdisplay(s); cout << "'.\n";
+
+    printTestFooter(desc);
+}
+
+void oStreamTest()
+{
+    char desc[] = "oStream";
+    printTestHeader(desc);
+
+    char str[] = "Some random contents.";
+    cout << "The oStream of the C-String contains: \n\t'" << str << "'\n";
+    STRING s (str);
+    cout << "The oStream of the STRING contains: \n\t'" << s << "'\n";;
+
+    printTestFooter(desc);
+}
+
+void iStreamTest()
+{
+    char desc[] = "iStream";
+    printTestHeader(desc);
+
+    cout << "How do you test this?~!\n";
+
+    printTestFooter(desc);
+}
+
+void comparisonOpTest()
+{
+    char desc[] = "== Operator";
+    printTestHeader(desc);
+
+    STRING s1("This is one string.");
+    STRING s2("This is one string.");
+    if (s1 == s2) cout << "The strings are equal.\n";
+    else cout <<"The strings are not equal.\n";
+
+    printTestFooter(desc);
+}
+
+void notEqualOpTest()
+{
+    char desc[] = "== Operator";
+    printTestHeader(desc);
+
+    STRING s1("This is one string.");
+    STRING s2("This is another string.");
+    if (s1 != s2) cout << "The strings are not equal.\n";
+    else cout <<"The strings are equal.\n";
+
+    printTestFooter(desc);
+}
+
+void plusOpTest()
+{
+    char desc[] = "+ Operator";
+    printTestHeader(desc);
+
+    STRING s1("FooFooFooFooFoo");
+    cout << "String One: ' " << s1 << "'.\n";
+    STRING s2("BarBarBarBarBar");
+    cout << "String Two: ' " << s2 << "'.\n";
+    cout << "The new string is: '" << (s1 + s2) << "'.\n";
+
+    printTestFooter(desc);
+}
+
+void indexTest()
+{
+    char desc[] = "Index";
+    printTestHeader(desc);
+
+    STRING s("abcdefgh");
+    int index = 0;
+    char result = s[index];
+
+    if (result == -1)
+        cout << index << " is not a valid position, the index ranges from 0 to " << s.length()-1 << " \n";
+    else
+        cout << "The character at position " << index << " of '" << s << "' is " << result << ". \n";
 
     printTestFooter(desc);
 }
