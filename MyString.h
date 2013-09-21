@@ -117,7 +117,7 @@ int position(const char);
 // Pre:
 // Post:
 //
-STRING& operator += (const STRING &right_argument);
+STRING operator += (const STRING &right_argument);
 // Immediate concatenation ( += ) operator;
 // This operator will be overloaded to
 // work with a right hand value of either type STRING, type char* or type char.
@@ -301,4 +301,6 @@ STRING operator + (const STRING &right_argument);
 
 // Helper Functions //
 friend void STRdisplay(const STRING&);
+
+bool isEmpty();
 };

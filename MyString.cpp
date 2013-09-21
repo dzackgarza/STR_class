@@ -34,7 +34,7 @@ STRING::STRING(const char* cstr)
     {
         cstrLength++; i++;
     }
-    contents = new char[cstrLength];
+    this->contents = new char[cstrLength];
     this->len = cstrLength;
 
     // Letter by letter assignment
@@ -60,7 +60,7 @@ STRING::STRING(const char c)
 STRING::STRING(const STRING& s)
 {
     this->len = s.len;
-    contents = new char[s.len];
+    this->contents = new char[s.len];
     for (unsigned i = 0; i < s.len; i++)
     {
         this->contents[i] = s.contents[i];
@@ -71,7 +71,9 @@ STRING::STRING(const STRING& s)
 // The destructor.
 STRING::~STRING()
 {
-    delete[] contents;
+    cout << "Destructor called on String: ";
+    STRdisplay(*this); cout << endl;
+    delete[] this->contents;
 }
 
 
@@ -90,13 +92,23 @@ unsigned STRING::length() const
 // This operator assigns one STRING to another.
     // if (this == &right_argument)
     //  return *this{}
-    // 1.  Deallocate any memory that MyClass is using internally
-    // 2.  Allocate some memory to hold the contents of rhs
-    // 3.  Copy the values from rhs into this instance
+    // 1.  Deallocate any memory that STRING is using internally
+    // 2.  Allocate some memory to hold the contents of the new STRING
+    // 3.  Copy the values from into this instance
     // 4.  Return *this
 STRING& STRING::operator = (const STRING &right_argument)
 {
+    if (this == &right_argument) return *this;
 
+    delete[] this->contents;
+    this->contents = new char [right_argument.length()];
+    this->len = right_argument.length();
+
+    for (unsigned i = 0; i < this->len; i++)
+    {
+        this->contents[i] = right_argument.contents[i];
+    }
+    return *this;
 }
 
 
@@ -116,9 +128,30 @@ int STRING::position(const char c)
 // Immediate concatenation ( += ) operator{}
 // This operator will be overloaded to
 // work with a right hand value of either type STRING, type char* or type char.
-STRING& STRING::operator += (const STRING &right_argument)
+STRING STRING::operator += (const STRING &right_argument)
 {
+    unsigned newLength = this->len + right_argument.length();
+    char* temp = new char[this->len];
+    for(unsigned i = 0; i < this->len; i++)
+    {
+        temp[i] = this->contents[i];
+    }
+    delete[] this->contents;
 
+    unsigned i = 0;
+    while (i < this->len)
+    {
+        this->contents[i] = temp[i];
+        i++;
+    }
+    for (unsigned j = 0; j < right_argument.length(); j++)
+    {
+        this->contents[i + j] = right_argument.contents[j];
+    }
+
+    this->len = newLength;
+    delete[] temp;
+    return *this;
 }
 
 
@@ -129,7 +162,7 @@ STRING& STRING::operator += (const STRING &right_argument)
 // Bounds checks must be done on these to make sure this index is in range.
 int STRING::operator [] (const int index)
 {
-    if (index >= this->len || index < 0) return -1;
+    if (index >= (int)this->len || index < 0) return -1;
     else return this->contents[index];
 }
 
@@ -209,25 +242,25 @@ bool operator != (const STRING &left_argument, const STRING &right_argument)
 // Comparison ( > ) operator{}
 bool operator > (const STRING &left_argument, const STRING &right_argument)
 {
-
+    return true;
 }
 
 // Comparison ( < ) operator{}
 bool operator < (const STRING &left_argument, const STRING &right_argument)
 {
-
+    return true;
 }
 
 // Comparison ( <= ) operator{}
 bool operator <= (const STRING &left_argument, const STRING &right_argument)
 {
-
+    return true;
 }
 
 // Comparison ( >= ) operator{}
 bool operator >= (const STRING &left_argument, const STRING &right_argument)
 {
-
+    return true;
 }
 
 // Concatenation ( + ) operator{}
@@ -274,4 +307,9 @@ void STRdisplay(const STRING& s)
     {
         cout << s.contents[i];
     }
+}
+
+bool STRING::isEmpty()
+{
+    return (this->len == 0);
 }

@@ -1,11 +1,11 @@
 # depslib dependency file v1.0
-1379729390 source:/home/zack/STR_class/MyString.cpp
+1379734843 source:/home/zack/STR_class/MyString.cpp
 	<iostream>
 	"MyString.h"
 
-1379729208 /home/zack/STR_class/MyString.h
+1379731715 /home/zack/STR_class/MyString.h
 
-1379729424 source:/home/zack/STR_class/TestMain.cpp
+1379734909 source:/home/zack/STR_class/TestMain.cpp
 	<iostream>
 	"MyString.h"
 

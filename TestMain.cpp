@@ -29,6 +29,8 @@ void comparisonOpTest();
 void notEqualOpTest();
 void plusOpTest();
 void indexTest();
+void copyTest();
+void compoundAddAssignOpTest();
 
 
 int main()
@@ -40,7 +42,7 @@ int main()
 
 void runtests()
 {
-    testEmptyConst();
+    /*testEmptyConst();
     testSingleCharConst();
     testCharStarConst();
     oStreamTest();
@@ -49,6 +51,26 @@ void runtests()
     notEqualOpTest();
     plusOpTest();
     indexTest();
+    copyTest();
+    */
+    compoundAddAssignOpTest();
+}
+
+void compoundAddAssignOpTest()
+{
+    char desc[] = "+= Operator";
+    printTestHeader(desc);
+
+    STRING s1("FooFoo");
+    cout << "String One: " << s1 << "\n";
+    STRING s2("BarBarBarBar");
+    cout << "String Two: " << s2 << "\n";
+    s1 += s2;
+    cout << "Combined String: " << s1 << "\n";
+    cout << "String One: " << s1 << s1.length() << "\n";
+    cout << "String Two: " << s2 << s2.length() << "\n";
+
+    printTestFooter(desc);
 }
 
 void testEmptyConst()
@@ -58,8 +80,8 @@ void testEmptyConst()
 
     STRING s;
     cout << "STRING contains '"; STRdisplay(s); cout << "'.\n"
-        << "STRING length is " << s.length() << ".\n";
-
+        << "STRING length is " << s.length() << ".\n"
+        << "isEmpty returns " << (s.isEmpty() ? "True" : "False") << ".\n";
 
     printTestFooter(desc);
 }
@@ -170,6 +192,22 @@ void indexTest()
 
     printTestFooter(desc);
 }
+
+void copyTest()
+{
+    char desc[] = "Index";
+    printTestHeader(desc);
+
+    STRING s1("Foo");
+    cout << "String one contains: \n\t'" << s1 << "'\n";
+    STRING s2;
+    cout << "String two contains: \n\t'" << s2 << "'\n";
+    s2 = s1;
+    cout << "After assignment, String two now contains: \n\t'" << s2 << "'\n";
+
+    printTestFooter(desc);
+}
+
 
 void printTestHeader(char testName[])
 {
