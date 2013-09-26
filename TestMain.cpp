@@ -31,18 +31,26 @@ void plusOpTest();
 void indexTest();
 void copyTest();
 void compoundAddAssignOpTest();
-
+void compoundAddAssignOpTestcharstar();
+void compoundAddAssignOpTestchar();
+void testDowncase();
+void testUpcase();
+void testToggle();
 
 int main()
 {
-    cout << "Running Tests";
-    runtests();
+    objectCount = 0;
+    {
+        cout << "Running Tests";
+        runtests();
+    }
+    cout << "Objects: " << objectCount;
     return 0;
 }
 
 void runtests()
 {
-    /*testEmptyConst();
+    testEmptyConst();
     testSingleCharConst();
     testCharStarConst();
     oStreamTest();
@@ -52,8 +60,92 @@ void runtests()
     plusOpTest();
     indexTest();
     copyTest();
-    */
+
     compoundAddAssignOpTest();
+    compoundAddAssignOpTestcharstar();
+    compoundAddAssignOpTestchar();
+
+    testDowncase();
+    testUpcase();
+    testToggle();
+
+}
+void testToggle()
+{
+    char desc[] = "ToggleCase";
+    printTestHeader(desc);
+
+    STRING s1("AbCdEfG");
+    cout << "String One: " << s1 << "\n";
+
+    s1.togglecase(0,90);
+
+    cout << "Toggled String: " << s1 << "\n";
+
+    printTestFooter(desc);
+}
+
+void testUpcase()
+{
+    char desc[] = "Upcase";
+    printTestHeader(desc);
+
+    STRING s1("abcdef");
+    cout << "String One: " << s1 << "\n";
+
+    s1.upcase(0,90);
+
+    cout << "Upcased String: " << s1 << "\n";
+
+    printTestFooter(desc);
+}
+
+void testDowncase()
+{
+    char desc[] = "Downcase";
+    printTestHeader(desc);
+
+    STRING s1("ABCDEF");
+    cout << "String One: " << s1 << "\n";
+
+    s1.downcase(0,8);
+
+    cout << "Downcased String: " << s1 << "\n";
+
+    printTestFooter(desc);
+}
+
+void compoundAddAssignOpTestchar()
+{
+    char desc[] = "+= Operator (char)";
+    printTestHeader(desc);
+
+    STRING s1("Foo");
+    cout << "String One: " << s1 << "\n";
+
+    s1 += 'b';
+
+    cout << "Combined String: " << s1 << "\n";
+    cout << "String One: " << s1 << "\n\t Length: " << s1.length() << "\n";
+
+    printTestFooter(desc);
+}
+
+
+void compoundAddAssignOpTestcharstar()
+{
+    char desc[] = "+= Operator (char*)";
+    printTestHeader(desc);
+
+    STRING s1("FooFooFooFooFooFooFooFooFooFoo");
+    cout << "String One: " << s1 << "\n";
+
+    s1 += "BarbarbarBARBARBARBARBARBARBARBARBARB";
+
+    cout << "Combined String: " << s1 << "\n";
+    cout << "String One: " << s1 << "\n\t Length: " << s1.length() << "\n";
+
+    printTestFooter(desc);
 }
 
 void compoundAddAssignOpTest()
@@ -63,12 +155,14 @@ void compoundAddAssignOpTest()
 
     STRING s1("FooFoo");
     cout << "String One: " << s1 << "\n";
-    STRING s2("BarBarBarBar");
+    STRING s2("BarBarBarBarBarbbarbarbarbarb");
     cout << "String Two: " << s2 << "\n";
+
     s1 += s2;
+
     cout << "Combined String: " << s1 << "\n";
-    cout << "String One: " << s1 << s1.length() << "\n";
-    cout << "String Two: " << s2 << s2.length() << "\n";
+    cout << "String One: " << s1 << "\n\t Length: " << s1.length() << "\n";
+    cout << "String Two: " << s2 << "\n\t Length: " << s2.length() << "\n";
 
     printTestFooter(desc);
 }

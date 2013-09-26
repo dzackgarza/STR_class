@@ -11,6 +11,7 @@
 #include "MyString.h"
 
 using namespace std;
+int objectCount = 0;
 
 //          Constructors / Destructor               //
 /****************************************************/
@@ -20,6 +21,8 @@ STRING::STRING()
 {
     this->len = 0;
     contents = new char[0];
+    objectCount++;
+
 }
 
 // This constructor will take a char* and use it to initialize the
@@ -42,6 +45,7 @@ STRING::STRING(const char* cstr)
     {
         this->contents[i] = cstr[i];
     }
+    objectCount++;
 }
 
 
@@ -52,6 +56,8 @@ STRING::STRING(const char c)
     this->len = 1;
     contents = new char[this->len];
     this->contents[0] = c;
+    objectCount++;
+
 }
 
 
@@ -65,15 +71,18 @@ STRING::STRING(const STRING& s)
     {
         this->contents[i] = s.contents[i];
     }
+    objectCount++;
+
 }
 
 
 // The destructor.
 STRING::~STRING()
 {
-    cout << "Destructor called on String: ";
-    STRdisplay(*this); cout << endl;
-    delete[] this->contents;
+    //cout << "Destructor called on String: ";
+    //STRdisplay(*this); cout << endl;
+    objectCount--;
+    delete[] contents;
 }
 
 
@@ -101,13 +110,13 @@ STRING& STRING::operator = (const STRING &right_argument)
     if (this == &right_argument) return *this;
 
     delete[] this->contents;
-    this->contents = new char [right_argument.length()];
-    this->len = right_argument.length();
+    this->contents = new char [right_argument.len];
 
-    for (unsigned i = 0; i < this->len; i++)
+    for (unsigned i = 0; i < right_argument.len; i++)
     {
         this->contents[i] = right_argument.contents[i];
     }
+    this->len = right_argument.len;
     return *this;
 }
 
@@ -121,7 +130,7 @@ int STRING::position(const char c)
         if (contents[i] == c) return i;
     }
     // Character not found.
-    return -1;
+    throw int(1);
 }
 
 
@@ -131,28 +140,47 @@ int STRING::position(const char c)
 STRING STRING::operator += (const STRING &right_argument)
 {
     unsigned newLength = this->len + right_argument.length();
-    char* temp = new char[this->len];
+    char temp[this->len];
+
+    // Copy the left hand argument into a temporary char array
+    // so we can delete its contents and reallocate more memory
     for(unsigned i = 0; i < this->len; i++)
     {
         temp[i] = this->contents[i];
     }
     delete[] this->contents;
+    this->contents = new char[newLength];
 
     unsigned i = 0;
+    // Copy the first string's contents back in.
     while (i < this->len)
     {
         this->contents[i] = temp[i];
         i++;
     }
+    // Copy the second string's contents in.
     for (unsigned j = 0; j < right_argument.length(); j++)
     {
         this->contents[i + j] = right_argument.contents[j];
     }
 
     this->len = newLength;
-    delete[] temp;
     return *this;
 }
+
+STRING STRING::operator += (const char* &right_argument)
+{
+    *this += STRING(right_argument);
+    return *this;
+}
+
+STRING STRING::operator += (const char &right_argument)
+{
+    *this += STRING(right_argument);
+    return *this;
+}
+
+
 
 
 // Index ( [ ] ) operator{}
@@ -162,7 +190,13 @@ STRING STRING::operator += (const STRING &right_argument)
 // Bounds checks must be done on these to make sure this index is in range.
 int STRING::operator [] (const int index)
 {
-    if (index >= (int)this->len || index < 0) return -1;
+    if (index >= (int)this->len || index < 0) throw int(1);
+    else return this->contents[index];
+}
+
+int STRING::operator [] (const int index) const
+{
+    if (index >= (int)this->len || index < 0) throw int(1);
     else return this->contents[index];
 }
 
@@ -171,17 +205,30 @@ int STRING::operator [] (const int index)
 // alphabetic characters to upper case.
 // Functions 11,12, & 13 will work on the character at index first through, but not including, the character at index
 // last. Bounds checks must be done on these to make sure they are in range.
-void STRING::upcase(unsigned first, unsigned last)
+void STRING::upcase(const unsigned first, const unsigned last)
 {
-
+    for (unsigned i = first; i < last && i <= this->len && i >= 0; i++)
+    {
+        if (this->contents[i] >= 'a' && this->contents[i] <= 'z')
+        {
+            this->contents[i] &= ('A' - 'a' - 1);    // 223 = 1101 1111; Equivalent to subtracting 32 from ASCII value by clearing the 5th bit.
+        }
+    }
 }
+
 
 
 // This function will change
 // all alphabetic characters to lower case.
-void STRING::downcase(unsigned first, unsigned last)
+void STRING::downcase(const unsigned first, const unsigned last)
 {
-
+    for (unsigned i = first; i < last && i <= this->len && i >= 0; i++)
+    {
+        if (this->contents[i] >= 'A' && this->contents[i] <= 'Z')
+        {
+            this->contents[i] |= 'a'-'A'; // 32 = 0010 0000; Equivalent to adding 32 to ASCII value by setting the 5th bit.
+        }
+    }
 }
 
 
@@ -189,7 +236,17 @@ void STRING::downcase(unsigned first, unsigned last)
 // change the case of all alphabetic characters.
 void STRING::togglecase(unsigned first, unsigned last)
 {
-
+    for (unsigned i = first; i < last && i <= this->len && i >= 0; i++)
+    {
+        if (this->contents[i] >= 'A' && this->contents[i] <= 'Z') // Is it an uppercase letter?
+        {
+            this->contents[i] |= 'a'-'A'; // Send it to lowercase
+        }
+        else if (this->contents[i] >= 'a' && this->contents[i] <= 'z')  // Is it a lowercase letter?
+        {
+            this->contents[i] &= ('A' - 'a' - 1);    // Send it to uppercase
+        }
+    }
 }
 
 

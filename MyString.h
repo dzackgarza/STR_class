@@ -12,7 +12,7 @@
 
 // Class Invariants: //
 
-
+extern int objectCount;
 
 class STRING {
     unsigned len;
@@ -121,6 +121,8 @@ STRING operator += (const STRING &right_argument);
 // Immediate concatenation ( += ) operator;
 // This operator will be overloaded to
 // work with a right hand value of either type STRING, type char* or type char.
+STRING operator += (const char* &right_argument);
+STRING operator += (const char &right_argument);
 /**********************************************/
 
 
@@ -134,6 +136,7 @@ int operator [] (const int index);
 // error is handled if the index is out of range. This is to be overloaded with a
 // const and non-const version.
 // Bounds checks must be done on these to make sure this index is in range.
+int operator [] (const int index) const;
 /**********************************************/
 
 
@@ -141,7 +144,7 @@ int operator [] (const int index);
 // Pre:
 // Post:
 //
-void upcase(unsigned first, unsigned last);
+void upcase(const unsigned first, const unsigned last);
 // This function will change all
 // alphabetic characters to upper case.
 // Functions 11,12, & 13 will work on the character at index first through, but not including, the character at index
@@ -153,7 +156,7 @@ void upcase(unsigned first, unsigned last);
 // Pre:
 // Post:
 //
-void downcase(unsigned first, unsigned last);
+void downcase(const unsigned first, const unsigned last);
 // This function will change
 // all alphabetic characters to lower case.
 /**********************************************/
@@ -163,7 +166,7 @@ void downcase(unsigned first, unsigned last);
 // Pre:
 // Post:
 //
-void togglecase(unsigned first, unsigned last);
+void togglecase(const unsigned first, const unsigned last);
 // This function will
 // change the case of all alphabetic characters.
 /**********************************************/
