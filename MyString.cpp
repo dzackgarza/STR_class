@@ -111,6 +111,18 @@ STRING& STRING::operator = (const STRING &right_argument)
     return *this;
 }
 
+STRING& STRING::operator = (const char* &right_argument)
+{
+    *this = STRING(right_argument);
+    return *this;
+}
+
+STRING& STRING::operator = (const char &right_argument)
+{
+    *this = STRING(right_argument);
+    return *this;
+}
+
 
 // This will return the position of the first occurrence of char in
 // the STRING as an int. Throws error (1) if the char is not in the STRING.
@@ -202,6 +214,10 @@ void STRING::upcase(const unsigned first, const unsigned last)
             this->contents[i] &= ('A' - 'a' - 1);
     }
 }
+void STRING::upcase()
+{
+    this->upcase(0, this->len);
+}
 
 
 
@@ -216,6 +232,10 @@ void STRING::downcase(const unsigned first, const unsigned last)
             this->contents[i] |= 'a'-'A'; // 32 = 0010 0000; Equivalent to adding 32 to ASCII value by setting the 5th bit.
         }
     }
+}
+void STRING::downcase()
+{
+    this->downcase(0, this->len);
 }
 
 
@@ -235,7 +255,10 @@ void STRING::togglecase(unsigned first, unsigned last)
         }
     }
 }
-
+void STRING::togglecase()
+{
+    this->togglecase(0, this->len);
+}
 
 
 //               Comparison / Friend Functions      //
@@ -305,6 +328,15 @@ bool operator != (const STRING &left_argument, const char* &right_argument)
 {
     return !(left_argument == STRING(right_argument));
 }
+bool operator != (const char &right_argument, const STRING &left_argument)
+{
+    return !(STRING(left_argument) == right_argument);
+}
+bool operator != (const STRING &right_argument, const char &left_argument)
+{
+    return !(left_argument == STRING(right_argument));
+}
+
 
 
 

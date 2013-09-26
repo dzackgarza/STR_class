@@ -18,6 +18,8 @@ class STRING {
     char* contents;
     public:
 //          Constructors / Destructor               //
+/****************************************************/
+
 
 
 /****************************************************/
@@ -68,6 +70,8 @@ STRING(const STRING&);
 
 
 
+
+
 //                  Member Functions                //
 /****************************************************/
 
@@ -90,6 +94,8 @@ unsigned length() const;
     // 3.  Copy the values from rhs into this instance
     // 4.  Return *this
 STRING& operator = (const STRING &right_argument);
+STRING& operator = (const char* &right_argument);
+STRING& operator = (const char &right_argument);
 /**********************************************/
 
 
@@ -97,7 +103,7 @@ STRING& operator = (const STRING &right_argument);
 // Pre:
 // Post:
 // This will return the position of the first occurrence of char in
-// the STRING as an int. Returns -1 if the char is not in the STRING.
+// the STRING as an int. Throws a positive number if the char is not in the STRING.
 int position(const char);
 /**********************************************/
 
@@ -135,6 +141,7 @@ char& operator [] (const int index) const;
 // Functions 11,12, & 13 will work on the character at index first through, but not including, the character at index
 // last. Bounds checks must be done on these to make sure they are in range.
 void upcase(const unsigned first, const unsigned last);
+void upcase(); // Upcases the whole string.
 /**********************************************/
 
 
@@ -144,6 +151,7 @@ void upcase(const unsigned first, const unsigned last);
 // This function will change
 // all alphabetic characters to lower case.
 void downcase(const unsigned first, const unsigned last);
+void downcase(); // Downcases the entire string.
 /**********************************************/
 
 
@@ -153,6 +161,7 @@ void downcase(const unsigned first, const unsigned last);
 // This function will
 // change the case of all alphabetic characters.
 void togglecase(const unsigned first, const unsigned last);
+void togglecase(); // Toggle entire string.
 /**********************************************/
 
 
@@ -205,9 +214,12 @@ bool operator == (const char &left_argument) const;
 // Pre:
 // Post:
 // Comparison ( != ) operator;
-friend bool operator != (const STRING &right_argument, const STRING &left_argument);
+friend bool operator != (const STRING &left_argument, const STRING &right_argument);
 friend bool operator != (const char* &left_argument, const STRING &right_argument);
-friend bool operator != (const STRING &left_argument, const char* &right_argument);
+friend bool operator != (const STRING &left_argument, const char* &right_argument);\
+//todo
+friend bool operator != (const char &left_argument, const STRING &right_argument);
+friend bool operator != (const STRING &left_argument, const char &right_argument);
 /**********************************************/
 
 
@@ -218,6 +230,9 @@ friend bool operator != (const STRING &left_argument, const char* &right_argumen
 friend bool operator > (const STRING &left_argument, const STRING &right_argument);
 friend bool operator > (const char* &left_argument, const STRING &right_argument);
 friend bool operator > (const STRING &left_argument, const char* &right_argument);
+//todo
+friend bool operator > (const char &left_argument, const STRING &right_argument);
+friend bool operator > (const STRING &left_argument, const char &right_argument);
 /**********************************************/
 
 
@@ -228,6 +243,9 @@ friend bool operator > (const STRING &left_argument, const char* &right_argument
 friend bool operator < (const STRING &left_argument, const STRING &right_argument);
 friend bool operator < (const char* &left_argument, const STRING &right_argument);
 friend bool operator < (const STRING &left_argument, const char* &right_argument);
+//todo
+friend bool operator < (const char &left_argument, const STRING &right_argument);
+friend bool operator < (const STRING &left_argument, const char &right_argument);
 /**********************************************/
 
 
@@ -238,6 +256,9 @@ friend bool operator < (const STRING &left_argument, const char* &right_argument
 friend bool operator <= (const STRING &left_argument, const STRING &right_argument);
 friend bool operator <= (const char* &left_argument, const STRING &right_argument);
 friend bool operator <= (const STRING &left_argument, const char* &right_argument);
+//todo
+friend bool operator <= (const char &left_argument, const STRING &right_argument);
+friend bool operator <= (const STRING &left_argument, const char &right_argument);
 /**********************************************/
 
 
@@ -248,6 +269,9 @@ friend bool operator <= (const STRING &left_argument, const char* &right_argumen
 friend bool operator >= (const STRING &left_argument, const STRING &right_argument);
 friend bool operator >= (const char* &left_argument, const STRING &right_argument);
 friend bool operator >= (const STRING &left_argument, const char* &right_argument);
+//todo
+friend bool operator >= (const char &left_argument, const STRING &right_argument);
+friend bool operator >= (const STRING &left_argument, const char &right_argument);
 /**********************************************/
 
 
