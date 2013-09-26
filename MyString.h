@@ -157,9 +157,9 @@ STRING operator += (const char &right_argument);
 // If the index is out of range, throws a positive integer error.
 
 //inout             //in
-char& operator [] (const unsigned index);
+char& operator [] (const int index);
 //inout             //in
-char& operator [] (const unsigned index) const;
+char& operator [] (const int index) const;
 /**********************************************/
 
 
@@ -343,7 +343,7 @@ STRING operator + (const char &right_argument);
 // Pre:
 // Post:
 //
-// STRING& operator char*(const STRING &right_argument);
+operator char*();
 // operator char*();
 // This will cast our STRING to a char*.
 /**********************************************/

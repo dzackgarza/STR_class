@@ -39,6 +39,8 @@ void testToggle();
 void testNonPrint();
 void testCompare();
 
+void testcharstar();
+
 int main()
 {
     {
@@ -71,6 +73,15 @@ void runtests()
     testNonPrint();
 
     testCompare();
+    testcharstar();
+}
+
+void testcharstar()
+{
+    STRING s1 = "Some text.";
+    cout << "String One: '" << s1 << "'.\n";
+    char* c = (char*)s1;
+    cout << "Char* String: '" << c << "'.\n";
 }
 void testCompare()
 {
@@ -78,7 +89,8 @@ void testCompare()
     printTestHeader(desc);
 
     STRING s1("a");
-    STRING s2("B");
+    STRING s2("a");
+    s1[0] = 132;
     cout << "String 1: '" << s1 << "'.\n";
     cout << "String 2: '" << s2 << "'.\n";
     cout << "Is " << s1 << " > " << s2 << "? : " << ((s1 > s2) ? "True" : "False") << ".\n";
@@ -86,11 +98,6 @@ void testCompare()
 
     cout << "Is " << s1 << " < " << s2 << "? : " << ((s1 < s2) ? "True" : "False") << ".\n";
     cout << "Is " << s1 << " <= " << s2 << "? : " << ((s1 <= s2) ? "True" : "False") << ".\n\n";
-
-
-
-
-
 
     printTestFooter(desc);
 }
@@ -317,7 +324,7 @@ void indexTest()
     printTestHeader(desc);
 
     STRING s("abcdefgh");
-    int index = 0;
+    unsigned index = 0;
     char result = s[index];
 
     if (result == -1)

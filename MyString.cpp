@@ -191,13 +191,13 @@ STRING STRING::operator += (const char &right_argument)
 // error is handled if the index is out of range. This is to be overloaded with a
 // const and non-const version.
 // Bounds checks must be done on these to make sure this index is in range.
-char& STRING::operator [] (const unsigned index)
+char& STRING::operator [] (const int index)
 {
     if (index >= (int)this->len || index < 0) throw int(1);
     else return this->contents[index];
 }
 
-char& STRING::operator [] (const unsigned index) const
+char& STRING::operator [] (const int index) const
 {
     if (index >= (int)this->len || index < 0) throw int(1);
     else return this->contents[index];
@@ -535,6 +535,7 @@ STRING STRING::operator + (const char &right_argument)
 // Notice that the numerical (ASCII) value of a
 // character decides its position when comparing upper to lower case of the same letter,
 // e.g., "A" < "a", but it does not when comparing differing letters
+// Returns the answer to "Does inA come before inB alphabetically?"
 bool alphaCompare(const STRING& inA, const STRING& inB)
 {
     STRING A(inA);
@@ -542,10 +543,39 @@ bool alphaCompare(const STRING& inA, const STRING& inB)
 
     for (unsigned i = 0; i < A.length() && i < B.length() ; i++)
     {
-        if (A[i] != B[i] && downcase(A[i]) != downcase(B[i])) return (A[i] < B[i]); // If they are not the same letter.
-        //else if (downcase(A[i]) == downcase(B[i])) return true;     // If they are the same letter, but different cases.
-        else if (A[i] == B[i]) return (downcase(A[i] < downcase(B[i])));    // Same letter, same case.
+        if (A[i] != B[i])
+        {
+            // Are both characters alphabetic?
+            if (
+                ((A[i] >= 'A' && A[i]<= 'Z') ||
+                (A[i] >= 'a' && A[i] <= 'z')) &&
+                ((B[i] >= 'A' && B[i]<= 'Z') ||
+                (B[i] >= 'a' && B[i] <= 'z'))
+                )
+            {
+                // Same character, different case
+                if (downcase(A[i]) == downcase(B[i])) return A[i] < B[i];
+
+                // Different character, same case
+                else if (
+                ((A[i] >= 'A' && A[i] <= 'Z') &&
+                (B[i] >= 'A' && B[i] <= 'Z')) ||
+                ((A[i] >= 'a' && A[i] <= 'z') &&
+                (B[i] >= 'a' && B[i] <= 'z'))
+                )
+                {
+                    return (A[i] < B[i]);
+                }
+                // Different character, different case
+                else return (downcase(A[i]) < downcase(B[i]));
+            }
+            else
+            {
+                return A[i] < B[i]; // Not an alphabetic character. Compare ASCII values.
+            }
+        }
     }
+    // All characters match. Shorter strings come first - is A shorter than B?
     return (A.length() < B.length());
 }
 
@@ -561,3 +591,17 @@ bool STRING::isEmpty()
 {
     return (this->len == 0);
 }
+
+STRING::operator char*()
+{
+    char c[this->len+1];
+    unsigned i = 0;
+    while (i < this->len)
+    {
+        c[i] = this->contents[i];
+        i++;
+    }
+    c[i] = '\0';
+    return c;
+}
+
