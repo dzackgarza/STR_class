@@ -36,15 +36,14 @@ void compoundAddAssignOpTestchar();
 void testDowncase();
 void testUpcase();
 void testToggle();
+void testNonPrint();
 
 int main()
 {
-    objectCount = 0;
     {
         cout << "Running Tests";
         runtests();
     }
-    cout << "Objects: " << objectCount;
     return 0;
 }
 
@@ -68,8 +67,26 @@ void runtests()
     testDowncase();
     testUpcase();
     testToggle();
-
+    testNonPrint();
 }
+
+void testNonPrint()
+{
+    /*STRING s1;
+    for (int i = 0; i <255; i++)
+        s1 += char(i);
+    cout << s1 << "\n";
+
+    char s2[255];
+    int j = 0;
+    for (int i = 30; i < 255; i++)
+        cout << (char) i;
+        j++;
+    // cout << s2 << "\n";
+    // STRdisplay(s1);
+    cout << endl; */
+}
+
 void testToggle()
 {
     char desc[] = "ToggleCase";

@@ -11,63 +11,55 @@
 #endif
 
 // Class Invariants: //
-
-extern int objectCount;
+//*******************//
 
 class STRING {
     unsigned len;
     char* contents;
     public:
-
-
-
-
 //          Constructors / Destructor               //
+
+
 /****************************************************/
 // Pre:
 // Post:
-//
-STRING();
 // This constructor will initialize an empty STRING.
+STRING();
 /**********************************************/
 
 
 /**********************************************/
 // Pre:
 // Post:
-//
-STRING(const char*);
 // This constructor will take a char* and use it to initialize the
 // STRING.
+STRING(const char*);
 /**********************************************/
 
 
 /**********************************************/
 // Pre:
 // Post:
-//
-STRING(const char);
 // This constructor will take a char and use it to initialize the
 // STRING.
+STRING(const char);
 /**********************************************/
 
 
 /**********************************************/
 // Pre:
 // Post:
-//
-STRING(const STRING&);
 // This constructor will take a STRING and use it to initialize
 // the STRING. This is called the copy constructor.
+STRING(const STRING&);
 /**********************************************/
 
 
 /**********************************************/
 // Pre:
 // Post:
-//
-~STRING();
 // The destructor.
+~STRING();
 /**********************************************/
 
 
@@ -82,17 +74,14 @@ STRING(const STRING&);
 /**********************************************/
 // Pre:
 // Post:
-//
-unsigned length() const;
 // This will return the number of characters in the STRING.
+unsigned length() const;
 /**********************************************/
 
 /**********************************************/
 // Pre:
 // Post:
-//
 // Assignment ( = ) operator
-STRING& operator = (const STRING &right_argument);
 // This operator assigns one STRING to another.
     // if (this == &right_argument)
     //  return *this;
@@ -100,27 +89,26 @@ STRING& operator = (const STRING &right_argument);
     // 2.  Allocate some memory to hold the contents of rhs
     // 3.  Copy the values from rhs into this instance
     // 4.  Return *this
+STRING& operator = (const STRING &right_argument);
 /**********************************************/
 
 
 /**********************************************/
 // Pre:
 // Post:
-//
-int position(const char);
 // This will return the position of the first occurrence of char in
 // the STRING as an int. Returns -1 if the char is not in the STRING.
+int position(const char);
 /**********************************************/
 
 
 /**********************************************/
 // Pre:
 // Post:
-//
-STRING operator += (const STRING &right_argument);
 // Immediate concatenation ( += ) operator;
 // This operator will be overloaded to
 // work with a right hand value of either type STRING, type char* or type char.
+STRING operator += (const STRING &right_argument);
 STRING operator += (const char* &right_argument);
 STRING operator += (const char &right_argument);
 /**********************************************/
@@ -129,47 +117,46 @@ STRING operator += (const char &right_argument);
 /**********************************************/
 // Pre:
 // Post:
-//
-int operator [] (const int index);
 // Index ( [ ] ) operator;
 // This operator returns one character through indexing. An
 // error is handled if the index is out of range. This is to be overloaded with a
 // const and non-const version.
 // Bounds checks must be done on these to make sure this index is in range.
-int operator [] (const int index) const;
+char& operator [] (const int index);
+char& operator [] (const int index) const;
 /**********************************************/
 
 
 /**********************************************/
 // Pre:
 // Post:
-//
-void upcase(const unsigned first, const unsigned last);
 // This function will change all
 // alphabetic characters to upper case.
 // Functions 11,12, & 13 will work on the character at index first through, but not including, the character at index
 // last. Bounds checks must be done on these to make sure they are in range.
+void upcase(const unsigned first, const unsigned last);
 /**********************************************/
 
 
 /**********************************************/
 // Pre:
 // Post:
-//
-void downcase(const unsigned first, const unsigned last);
 // This function will change
 // all alphabetic characters to lower case.
+void downcase(const unsigned first, const unsigned last);
 /**********************************************/
 
 
 /**********************************************/
 // Pre:
 // Post:
-//
-void togglecase(const unsigned first, const unsigned last);
 // This function will
 // change the case of all alphabetic characters.
+void togglecase(const unsigned first, const unsigned last);
 /**********************************************/
+
+
+
 
 //           Comparison / Friend Functions          //
 /****************************************************/
@@ -188,84 +175,89 @@ void togglecase(const unsigned first, const unsigned last);
 /**********************************************/
 // Pre:
 // Post:
-//
-friend std::ostream& operator << (std::ostream &out, const STRING &right_argument);
 // Output stream ( << ) operator;
 // This operator will return an ostream.
+friend std::ostream& operator << (std::ostream &out, const STRING &right_argument);
 /**********************************************/
 
 
 /**********************************************/
 // Pre:
 // Post:
-//
-friend std::istream& operator >> (std::istream &in, const STRING &right_argument);
 // Input stream ( >> ) operator;
 // This operator will return an istream.
+friend std::istream& operator >> (std::istream &in, const STRING &right_argument);
 /**********************************************/
 
 
 /**********************************************/
 // Pre:
 // Post:
-//
-bool operator == (const STRING &right_argument) const;
 // Comparison ( == ) operator;
 // (see note below for all comparison operators)
+bool operator == (const STRING &right_argument) const;
+bool operator == (const char* &left_argument) const;
+bool operator == (const char &left_argument) const;
 /**********************************************/
 
 
 /**********************************************/
 // Pre:
 // Post:
-//
-friend bool operator != (const STRING &right_argument, const STRING &left_argument);
 // Comparison ( != ) operator;
+friend bool operator != (const STRING &right_argument, const STRING &left_argument);
+friend bool operator != (const char* &left_argument, const STRING &right_argument);
+friend bool operator != (const STRING &left_argument, const char* &right_argument);
 /**********************************************/
 
 
 /**********************************************/
 // Pre:
 // Post:
-//
-friend bool operator > (const STRING &left_argument, const STRING &right_argument);
 // Comparison ( > ) operator;
+friend bool operator > (const STRING &left_argument, const STRING &right_argument);
+friend bool operator > (const char* &left_argument, const STRING &right_argument);
+friend bool operator > (const STRING &left_argument, const char* &right_argument);
 /**********************************************/
 
 
 /**********************************************/
-friend bool operator < (const STRING &left_argument, const STRING &right_argument);
 // Pre:
 // Post:
-//
 // Comparison ( < ) operator;
+friend bool operator < (const STRING &left_argument, const STRING &right_argument);
+friend bool operator < (const char* &left_argument, const STRING &right_argument);
+friend bool operator < (const STRING &left_argument, const char* &right_argument);
 /**********************************************/
 
 
 /**********************************************/
 // Pre:
 // Post:
-//
-friend bool operator <= (const STRING &left_argument, const STRING &right_argument);
 // Comparison ( <= ) operator;
+friend bool operator <= (const STRING &left_argument, const STRING &right_argument);
+friend bool operator <= (const char* &left_argument, const STRING &right_argument);
+friend bool operator <= (const STRING &left_argument, const char* &right_argument);
 /**********************************************/
 
 
 /**********************************************/
 // Pre:
 // Post:
-//
-friend bool operator >= (const STRING &left_argument, const STRING &right_argument);
 // Comparison ( >= ) operator;
+friend bool operator >= (const STRING &left_argument, const STRING &right_argument);
+friend bool operator >= (const char* &left_argument, const STRING &right_argument);
+friend bool operator >= (const STRING &left_argument, const char* &right_argument);
 /**********************************************/
 
 
 /**********************************************/
 // Pre:
 // Post:
-//
-STRING operator + (const STRING &right_argument);
 // Concatenation ( + ) operator;
+STRING operator + (const STRING &right_argument);
+STRING operator + (const char* &right_argument);
+STRING operator + (const char &right_argument);
 /**********************************************/
 
 
@@ -301,6 +293,9 @@ STRING operator + (const STRING &right_argument);
 // This will cast our STRING to a float if possible. It will
 // return 0 if unsuccessful.
 /**********************************************/
+
+
+
 
 // Helper Functions //
 friend void STRdisplay(const STRING&);

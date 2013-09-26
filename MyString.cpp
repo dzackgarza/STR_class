@@ -11,7 +11,8 @@
 #include "MyString.h"
 
 using namespace std;
-int objectCount = 0;
+
+bool alphaCompare(const STRING& inA, const STRING& inB);
 
 //          Constructors / Destructor               //
 /****************************************************/
@@ -21,8 +22,6 @@ STRING::STRING()
 {
     this->len = 0;
     contents = new char[0];
-    objectCount++;
-
 }
 
 // This constructor will take a char* and use it to initialize the
@@ -45,7 +44,6 @@ STRING::STRING(const char* cstr)
     {
         this->contents[i] = cstr[i];
     }
-    objectCount++;
 }
 
 
@@ -56,8 +54,6 @@ STRING::STRING(const char c)
     this->len = 1;
     contents = new char[this->len];
     this->contents[0] = c;
-    objectCount++;
-
 }
 
 
@@ -71,17 +67,12 @@ STRING::STRING(const STRING& s)
     {
         this->contents[i] = s.contents[i];
     }
-    objectCount++;
-
 }
 
 
 // The destructor.
 STRING::~STRING()
 {
-    //cout << "Destructor called on String: ";
-    //STRdisplay(*this); cout << endl;
-    objectCount--;
     delete[] contents;
 }
 
@@ -122,7 +113,7 @@ STRING& STRING::operator = (const STRING &right_argument)
 
 
 // This will return the position of the first occurrence of char in
-// the STRING as an int. Returns -1 if the char is not in the STRING.
+// the STRING as an int. Throws error (1) if the char is not in the STRING.
 int STRING::position(const char c)
 {
     for (unsigned i = 0; i <= this->len; i++)
@@ -181,20 +172,18 @@ STRING STRING::operator += (const char &right_argument)
 }
 
 
-
-
 // Index ( [ ] ) operator{}
 // This operator returns one character through indexing. An
 // error is handled if the index is out of range. This is to be overloaded with a
 // const and non-const version.
 // Bounds checks must be done on these to make sure this index is in range.
-int STRING::operator [] (const int index)
+char& STRING::operator [] (const int index)
 {
     if (index >= (int)this->len || index < 0) throw int(1);
     else return this->contents[index];
 }
 
-int STRING::operator [] (const int index) const
+char& STRING::operator [] (const int index) const
 {
     if (index >= (int)this->len || index < 0) throw int(1);
     else return this->contents[index];
@@ -210,9 +199,7 @@ void STRING::upcase(const unsigned first, const unsigned last)
     for (unsigned i = first; i < last && i <= this->len && i >= 0; i++)
     {
         if (this->contents[i] >= 'a' && this->contents[i] <= 'z')
-        {
-            this->contents[i] &= ('A' - 'a' - 1);    // 223 = 1101 1111; Equivalent to subtracting 32 from ASCII value by clearing the 5th bit.
-        }
+            this->contents[i] &= ('A' - 'a' - 1);
     }
 }
 
@@ -290,35 +277,109 @@ bool STRING::operator == (const STRING &left_argument) const
     return true;
 }
 
+bool STRING::operator == (const char* &left_argument) const
+{
+    return (*this == STRING(left_argument));
+}
+
+bool STRING::operator == (const char &left_argument) const
+{
+    return (*this == STRING(left_argument));
+}
+
+
+
+
 // Comparison ( != ) operator{}
 bool operator != (const STRING &left_argument, const STRING &right_argument)
 {
     return !(left_argument == right_argument);
 }
 
+bool operator != (const char* &left_argument, const STRING &right_argument)
+{
+    return !(STRING(left_argument) == right_argument);
+}
+
+bool operator != (const STRING &left_argument, const char* &right_argument)
+{
+    return !(left_argument == STRING(right_argument));
+}
+
+
+
+
 // Comparison ( > ) operator{}
 bool operator > (const STRING &left_argument, const STRING &right_argument)
 {
-    return true;
+    return (alphaCompare(left_argument, right_argument));
 }
+bool operator > (const char* &left_argument, const STRING &right_argument)
+{
+    return (alphaCompare(STRING(left_argument), right_argument));
+}
+bool operator > (const STRING &left_argument, const char* &right_argument)
+{
+    return (alphaCompare(left_argument, STRING(right_argument)));
+}
+
+
+
 
 // Comparison ( < ) operator{}
 bool operator < (const STRING &left_argument, const STRING &right_argument)
 {
-    return true;
+    return !(left_argument > right_argument);
 }
+bool operator < (const char* &left_argument, const STRING &right_argument)
+{
+    return !(STRING(left_argument) > right_argument);
+}
+bool operator < (const STRING &left_argument, const char* &right_argument)
+{
+    return !(left_argument > STRING(right_argument));
+}
+
+
+
+
 
 // Comparison ( <= ) operator{}
 bool operator <= (const STRING &left_argument, const STRING &right_argument)
 {
-    return true;
+    return (left_argument < right_argument || left_argument == right_argument);
 }
+bool operator <= (const char* &left_argument, const STRING &right_argument)
+{
+    STRING l_arg(left_argument);
+    return (l_arg < right_argument || l_arg == right_argument);
+}
+bool operator <= (const STRING &left_argument, const char* &right_argument)
+{
+    STRING r_arg(right_argument);
+    return (left_argument < r_arg || left_argument == r_arg);
+}
+
+
+
+
 
 // Comparison ( >= ) operator{}
 bool operator >= (const STRING &left_argument, const STRING &right_argument)
 {
-    return true;
+    return (left_argument > right_argument || left_argument == right_argument);
 }
+bool operator >= (const char* &left_argument, const STRING &right_argument)
+{
+    STRING l_arg(left_argument);
+    return (l_arg > right_argument || l_arg== right_argument);
+}
+bool operator >= (const STRING &left_argument, const char* &right_argument)
+{
+    STRING r_arg(right_argument);
+    return (left_argument > r_arg|| left_argument == r_arg);
+}
+
 
 // Concatenation ( + ) operator{}
 STRING STRING::operator + (const STRING &right_argument)
@@ -343,6 +404,17 @@ STRING STRING::operator + (const STRING &right_argument)
     return temp;
 }
 
+STRING STRING::operator + (const char* &right_argument)
+{
+    STRING s1(right_argument);
+    return (*this + s1);
+}
+
+STRING STRING::operator + (const char &right_argument)
+{
+    STRING s1(right_argument);
+    return (*this + s1);
+}
 
 //               Extra Credit Functions             //
 /****************************************************/
@@ -358,6 +430,27 @@ STRING STRING::operator + (const STRING &right_argument)
 // return 0 if unsuccessful.
 
 // Helper Functions //
+bool alphaCompare(const STRING& inA, const STRING& inB)
+{
+    STRING A(inA);
+    STRING B(inB);
+    A.downcase(0, A.length());
+    B.downcase(0, B.length());
+
+    for (unsigned i = 0; i < A.length() && i < B.length() ; i++)
+    {
+        if (A[i] != B[i])
+        {
+            if (A[i] < B[i]) return true;
+            else if (A[i] > B[i]) return false;
+        }
+    }
+
+    // Here it is known that the strings are identical up to the length of the shorter string.
+    if (A.length() < B.length()) return true;
+    else return false; // (A.length > B.length)
+}
+
 void STRdisplay(const STRING& s)
 {
     for (unsigned i = 0; i < s.len; i++)
