@@ -13,6 +13,8 @@
 using namespace std;
 
 bool alphaCompare(const STRING& inA, const STRING& inB);
+char upcase(const char &c);
+char downcase(const char &c);
 
 //          Constructors / Destructor               //
 /****************************************************/
@@ -189,13 +191,13 @@ STRING STRING::operator += (const char &right_argument)
 // error is handled if the index is out of range. This is to be overloaded with a
 // const and non-const version.
 // Bounds checks must be done on these to make sure this index is in range.
-char& STRING::operator [] (const int index)
+char& STRING::operator [] (const unsigned index)
 {
     if (index >= (int)this->len || index < 0) throw int(1);
     else return this->contents[index];
 }
 
-char& STRING::operator [] (const int index) const
+char& STRING::operator [] (const unsigned index) const
 {
     if (index >= (int)this->len || index < 0) throw int(1);
     else return this->contents[index];
@@ -218,7 +220,13 @@ void STRING::upcase()
 {
     this->upcase(0, this->len);
 }
-
+char upcase(const char &c)
+{
+    char temp = c;
+    if (c >= 'a' && c <= 'z')
+        temp &= ('A' - 'a' - 1);
+    return temp;
+}
 
 
 // This function will change
@@ -229,13 +237,21 @@ void STRING::downcase(const unsigned first, const unsigned last)
     {
         if (this->contents[i] >= 'A' && this->contents[i] <= 'Z')
         {
-            this->contents[i] |= 'a'-'A'; // 32 = 0010 0000; Equivalent to adding 32 to ASCII value by setting the 5th bit.
+            this->contents[i] |= 'a'-'A';
         }
     }
 }
 void STRING::downcase()
 {
     this->downcase(0, this->len);
+}
+
+char downcase(const char &c)
+{
+    char temp = c;
+    if (c >= 'A' && c <= 'Z') // Is it an uppercase letter?
+            temp |= 'a'-'A'; // Send it to lowercase
+    return temp;
 }
 
 
@@ -299,7 +315,6 @@ bool STRING::operator == (const STRING &left_argument) const
     }
     return true;
 }
-
 bool STRING::operator == (const char* &left_argument) const
 {
     return (*this == STRING(left_argument));
@@ -323,16 +338,16 @@ bool operator != (const char* &left_argument, const STRING &right_argument)
 {
     return !(STRING(left_argument) == right_argument);
 }
+bool operator != (const char &left_argument, const STRING &right_argument)
+{
+    return !(STRING(left_argument) == right_argument);
+}
 
 bool operator != (const STRING &left_argument, const char* &right_argument)
 {
     return !(left_argument == STRING(right_argument));
 }
-bool operator != (const char &right_argument, const STRING &left_argument)
-{
-    return !(STRING(left_argument) == right_argument);
-}
-bool operator != (const STRING &right_argument, const char &left_argument)
+bool operator != (const STRING &left_argument, const char &right_argument)
 {
     return !(left_argument == STRING(right_argument));
 }
@@ -342,15 +357,25 @@ bool operator != (const STRING &right_argument, const char &left_argument)
 
 
 // Comparison ( > ) operator{}
-bool operator > (const STRING &left_argument, const STRING &right_argument)
+bool operator < (const STRING &left_argument, const STRING &right_argument)
 {
     return (alphaCompare(left_argument, right_argument));
 }
-bool operator > (const char* &left_argument, const STRING &right_argument)
+
+bool operator < (const char* &left_argument, const STRING &right_argument)
 {
     return (alphaCompare(STRING(left_argument), right_argument));
 }
-bool operator > (const STRING &left_argument, const char* &right_argument)
+bool operator < (const char &left_argument, const STRING &right_argument)
+{
+    return (alphaCompare(STRING(left_argument), right_argument));
+}
+
+bool operator < (const STRING &left_argument, const char* &right_argument)
+{
+    return (alphaCompare(left_argument, STRING(right_argument)));
+}
+bool operator < (const STRING &left_argument, const char &right_argument)
 {
     return (alphaCompare(left_argument, STRING(right_argument)));
 }
@@ -359,18 +384,29 @@ bool operator > (const STRING &left_argument, const char* &right_argument)
 
 
 // Comparison ( < ) operator{}
-bool operator < (const STRING &left_argument, const STRING &right_argument)
+bool operator > (const STRING &left_argument, const STRING &right_argument)
 {
-    return !(left_argument > right_argument);
+    return (right_argument < left_argument);
 }
-bool operator < (const char* &left_argument, const STRING &right_argument)
+
+bool operator > (const char* &left_argument, const STRING &right_argument)
 {
-    return !(STRING(left_argument) > right_argument);
+    return (right_argument < STRING(left_argument));
 }
-bool operator < (const STRING &left_argument, const char* &right_argument)
+bool operator > (const char &left_argument, const STRING &right_argument)
 {
-    return !(left_argument > STRING(right_argument));
+    return (right_argument < STRING(left_argument));
 }
+
+bool operator > (const STRING &left_argument, const char* &right_argument)
+{
+    return (STRING(right_argument) < left_argument);
+}
+bool operator > (const STRING &left_argument, const char &right_argument)
+{
+    return (STRING(right_argument) < left_argument);
+}
+
 
 
 
@@ -379,18 +415,31 @@ bool operator < (const STRING &left_argument, const char* &right_argument)
 // Comparison ( <= ) operator{}
 bool operator <= (const STRING &left_argument, const STRING &right_argument)
 {
-    return (left_argument < right_argument || left_argument == right_argument);
+    return (left_argument == right_argument || left_argument < right_argument);
 }
+
 bool operator <= (const char* &left_argument, const STRING &right_argument)
 {
     STRING l_arg(left_argument);
-    return (l_arg < right_argument || l_arg == right_argument);
+    return (l_arg == right_argument || l_arg < right_argument);
 }
+bool operator <= (const char &left_argument, const STRING &right_argument)
+{
+    STRING l_arg(left_argument);
+    return (l_arg == right_argument || l_arg < right_argument);
+}
+
 bool operator <= (const STRING &left_argument, const char* &right_argument)
 {
     STRING r_arg(right_argument);
-    return (left_argument < r_arg || left_argument == r_arg);
+    return (left_argument == r_arg || left_argument < r_arg);
 }
+bool operator <= (const STRING &left_argument, const char &right_argument)
+{
+    STRING r_arg(right_argument);
+    return (left_argument == r_arg || left_argument < r_arg);
+}
+
 
 
 
@@ -399,18 +448,31 @@ bool operator <= (const STRING &left_argument, const char* &right_argument)
 // Comparison ( >= ) operator{}
 bool operator >= (const STRING &left_argument, const STRING &right_argument)
 {
-    return (left_argument > right_argument || left_argument == right_argument);
+    return (left_argument == right_argument || left_argument > right_argument);
 }
+
 bool operator >= (const char* &left_argument, const STRING &right_argument)
 {
     STRING l_arg(left_argument);
-    return (l_arg > right_argument || l_arg== right_argument);
+    return (l_arg== right_argument || l_arg > right_argument);
 }
+bool operator >= (const char &left_argument, const STRING &right_argument)
+{
+    STRING l_arg(left_argument);
+    return (l_arg== right_argument || l_arg > right_argument);
+}
+
 bool operator >= (const STRING &left_argument, const char* &right_argument)
 {
     STRING r_arg(right_argument);
-    return (left_argument > r_arg|| left_argument == r_arg);
+    return (left_argument == r_arg || left_argument > r_arg);
 }
+bool operator >= (const STRING &left_argument, const char &right_argument)
+{
+    STRING r_arg(right_argument);
+    return (left_argument == r_arg || left_argument > r_arg);
+}
+
 
 
 // Concatenation ( + ) operator{}
@@ -435,13 +497,11 @@ STRING STRING::operator + (const STRING &right_argument)
     }
     return temp;
 }
-
 STRING STRING::operator + (const char* &right_argument)
 {
     STRING s1(right_argument);
     return (*this + s1);
 }
-
 STRING STRING::operator + (const char &right_argument)
 {
     STRING s1(right_argument);
@@ -461,26 +521,32 @@ STRING STRING::operator + (const char &right_argument)
 // This will cast our STRING to a float if possible. It will
 // return 0 if unsuccessful.
 
+
+
+
+
 // Helper Functions //
+
+// "a" < "b"    97 < 98
+// "A" < "B"    65 < 66
+// "A"< "a"     65 < 97
+// "a" < "B"    97 < 65
+// "ab" < "abc"
+// Notice that the numerical (ASCII) value of a
+// character decides its position when comparing upper to lower case of the same letter,
+// e.g., "A" < "a", but it does not when comparing differing letters
 bool alphaCompare(const STRING& inA, const STRING& inB)
 {
     STRING A(inA);
     STRING B(inB);
-    A.downcase(0, A.length());
-    B.downcase(0, B.length());
 
     for (unsigned i = 0; i < A.length() && i < B.length() ; i++)
     {
-        if (A[i] != B[i])
-        {
-            if (A[i] < B[i]) return true;
-            else if (A[i] > B[i]) return false;
-        }
+        if (A[i] != B[i] && downcase(A[i]) != downcase(B[i])) return (A[i] < B[i]); // If they are not the same letter.
+        //else if (downcase(A[i]) == downcase(B[i])) return true;     // If they are the same letter, but different cases.
+        else if (A[i] == B[i]) return (downcase(A[i] < downcase(B[i])));    // Same letter, same case.
     }
-
-    // Here it is known that the strings are identical up to the length of the shorter string.
-    if (A.length() < B.length()) return true;
-    else return false; // (A.length > B.length)
+    return (A.length() < B.length());
 }
 
 void STRdisplay(const STRING& s)

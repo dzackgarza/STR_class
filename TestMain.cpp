@@ -37,6 +37,7 @@ void testDowncase();
 void testUpcase();
 void testToggle();
 void testNonPrint();
+void testCompare();
 
 int main()
 {
@@ -68,8 +69,31 @@ void runtests()
     testUpcase();
     testToggle();
     testNonPrint();
-}
 
+    testCompare();
+}
+void testCompare()
+{
+    char desc[] = "Comparison";
+    printTestHeader(desc);
+
+    STRING s1("a");
+    STRING s2("B");
+    cout << "String 1: '" << s1 << "'.\n";
+    cout << "String 2: '" << s2 << "'.\n";
+    cout << "Is " << s1 << " > " << s2 << "? : " << ((s1 > s2) ? "True" : "False") << ".\n";
+    cout << "Is " << s1 << " >= " << s2 << "? : " << ((s1 >= s2) ? "True" : "False") << ".\n\n";
+
+    cout << "Is " << s1 << " < " << s2 << "? : " << ((s1 < s2) ? "True" : "False") << ".\n";
+    cout << "Is " << s1 << " <= " << s2 << "? : " << ((s1 <= s2) ? "True" : "False") << ".\n\n";
+
+
+
+
+
+
+    printTestFooter(desc);
+}
 void testNonPrint()
 {
     /*STRING s1;

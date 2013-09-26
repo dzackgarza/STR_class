@@ -11,7 +11,19 @@
 #endif
 
 // Class Invariants: //
+// The allocated memory of a STRINGS contents will always be len bytes.
 //*******************//
+
+// Global Conditions //
+// To use any member functions of a STRING object, it must be initialized by one of the constructors.
+// All member functions assume the parent STRING object has validly allocated memory, and that there
+// is enough memory available to hold the string's contents.
+//
+// All char* arguments must be valid, null-terminated character arrays.
+// Additionally, the null terminator must be within strlen(char*) bytes of the
+// beginning of all char*s - that is, they must occur within valid memory.
+//
+// Trailing null-terminators from c-style strings are never copied into STRINGs.
 
 class STRING {
     unsigned len;
@@ -23,43 +35,44 @@ class STRING {
 
 
 /****************************************************/
-// Pre:
-// Post:
+// Pre: None
+// Post: A STRING is created with len == 0 and contents == "".
 // This constructor will initialize an empty STRING.
 STRING();
 /**********************************************/
 
 
 /**********************************************/
-// Pre:
-// Post:
+// Pre: cstr must be a null-terminated character array.
+// Post: A STRING is created with len == strlen(cstr) whose contents are
+//   are equal to the contents of cstr, without the trailing null terminator.
 // This constructor will take a char* and use it to initialize the
 // STRING.
-STRING(const char*);
+STRING(const char* cstr);
 /**********************************************/
 
 
 /**********************************************/
-// Pre:
-// Post:
+// Pre: None
+// Post: A STRING is created with len == 1 and contents == c
 // This constructor will take a char and use it to initialize the
 // STRING.
-STRING(const char);
+STRING(const char c);
 /**********************************************/
 
 
 /**********************************************/
-// Pre:
-// Post:
+// Pre: The STRING s has been properly intialized by another constructor.
+// Post: A new STRING is created with len == s.len and contents == s.contents
 // This constructor will take a STRING and use it to initialize
 // the STRING. This is called the copy constructor.
-STRING(const STRING&);
+STRING(const STRING& s);
 /**********************************************/
 
 
 /**********************************************/
-// Pre:
-// Post:
+// Pre: The STRING has been created with one of the above constructors.
+// Post: The memory allocated to the string's contents is freed.
 // The destructor.
 ~STRING();
 /**********************************************/
@@ -76,23 +89,16 @@ STRING(const STRING&);
 /****************************************************/
 
 /**********************************************/
-// Pre:
-// Post:
+// Pre: None
+// Post: Return s.len to non-member functions.
 // This will return the number of characters in the STRING.
 unsigned length() const;
 /**********************************************/
 
 /**********************************************/
-// Pre:
-// Post:
-// Assignment ( = ) operator
-// This operator assigns one STRING to another.
-    // if (this == &right_argument)
-    //  return *this;
-    // 1.  Deallocate any memory that MyClass is using internally
-    // 2.  Allocate some memory to hold the contents of rhs
-    // 3.  Copy the values from rhs into this instance
-    // 4.  Return *this
+// Pre: Right_argument must be an initialized STRING, a null terminated c-string, or a character.
+// Post: The STRING object on the left hand side of the assignment operation will be initialized
+//      All characters except for trailing null terminators will be copied into the STRINGs contents.
 STRING& operator = (const STRING &right_argument);
 STRING& operator = (const char* &right_argument);
 STRING& operator = (const char &right_argument);
@@ -100,20 +106,18 @@ STRING& operator = (const char &right_argument);
 
 
 /**********************************************/
-// Pre:
-// Post:
-// This will return the position of the first occurrence of char in
-// the STRING as an int. Throws a positive number if the char is not in the STRING.
+// Pre: None
+// Post: Returns the position of the first occurrence of char in
+//      the STRING as an int. Throws a positive number if char is not in the STRING.
 int position(const char);
 /**********************************************/
 
 
 /**********************************************/
-// Pre:
-// Post:
-// Immediate concatenation ( += ) operator;
-// This operator will be overloaded to
-// work with a right hand value of either type STRING, type char* or type char.
+// Pre: A STRING object has been initialized with a constructor.
+// Post: Returns a new STRING whose contents are the right_argument's contents
+//      appended to the implicit STRING object's contents.
+//      Immediate concatenation ( += ) operator;
 STRING operator += (const STRING &right_argument);
 STRING operator += (const char* &right_argument);
 STRING operator += (const char &right_argument);
@@ -121,45 +125,38 @@ STRING operator += (const char &right_argument);
 
 
 /**********************************************/
-// Pre:
-// Post:
-// Index ( [ ] ) operator;
-// This operator returns one character through indexing. An
-// error is handled if the index is out of range. This is to be overloaded with a
-// const and non-const version.
-// Bounds checks must be done on these to make sure this index is in range.
-char& operator [] (const int index);
-char& operator [] (const int index) const;
+// Pre: Index must be <= the STRING's length for valid results
+// Post: Returns a reference to the character contained at index.
+// Index ( [ ] ) operator:
+// If the index is out of range, throws a positive integer error.
+char& operator [] (const unsigned index);
+char& operator [] (const unsigned index) const;
 /**********************************************/
 
 
 /**********************************************/
-// Pre:
-// Post:
-// This function will change all
-// alphabetic characters to upper case.
-// Functions 11,12, & 13 will work on the character at index first through, but not including, the character at index
-// last. Bounds checks must be done on these to make sure they are in range.
+// Pre: first >= 0 && < len; last >= 0 && < len for valid results
+// Post: Converts all alphabetic characters between the indexes
+// of first and last to uppercase letters.
 void upcase(const unsigned first, const unsigned last);
 void upcase(); // Upcases the whole string.
 /**********************************************/
 
 
 /**********************************************/
-// Pre:
-// Post:
-// This function will change
-// all alphabetic characters to lower case.
+// Pre: first >= 0 && < len; last >= 0 && < len for valid results
+// Post: Converts all alphabetic characters between the indexes
+//      of first and last to lowercase letters.
 void downcase(const unsigned first, const unsigned last);
 void downcase(); // Downcases the entire string.
 /**********************************************/
 
 
 /**********************************************/
-// Pre:
-// Post:
-// This function will
-// change the case of all alphabetic characters.
+// Pre: first >= 0 && < len; last >= 0 && < len for valid results
+// Post: Changes all uppercase alphabetic characters to lowercase and
+//      changes all lowercase alphabetic characters to uppercase within indexes
+//      first to last.
 void togglecase(const unsigned first, const unsigned last);
 void togglecase(); // Toggle entire string.
 /**********************************************/
@@ -169,21 +166,11 @@ void togglecase(); // Toggle entire string.
 
 //           Comparison / Friend Functions          //
 /****************************************************/
-// Two STRINGs will be said to be equal if they contain exactly the same characters, for
-// example, "abc" == "abc" but "ABC" != "abc". The operators, ">", "<", ">=",
-// and "<=" will compare the STRINGs alphabetically, for example, "a" < "b", "A" < "B", "A"
-// < "a", "a" < "B", and "ab" < "abc". Notice that the numerical (ASCII) value of a
-// character decides its position when comparing upper to lower case of the same letter,
-// e.g., "A" < "a", but it does not when comparing differing letters, e.g., "a" < "B". All non-
-// alphabetic characters will be compared by their ASCII values.
-
-// YOU ARE TO IMPLEMENT A MINIMUM NUMBER (2) OF THE COMPARISON OPERATORS AND USE
-// THESE TO IMPLEMENT THE OTHERS. IMPLEMENT OPERATOR== AND OPERATOR>. USE THESE TO
-// IMPLEMENT ALL OF THE OTHER COMPARISON OPERATORS.
 
 /**********************************************/
-// Pre:
-// Post:
+// Pre: None
+// Post: Extracts individual characters from the STRING's contents
+//          and appends them to any ostream
 // Output stream ( << ) operator;
 // This operator will return an ostream.
 friend std::ostream& operator << (std::ostream &out, const STRING &right_argument);
@@ -191,8 +178,9 @@ friend std::ostream& operator << (std::ostream &out, const STRING &right_argumen
 
 
 /**********************************************/
-// Pre:
-// Post:
+// Pre: None
+// Post: Extracts individual characters from the STRING's contents
+//          and appends them to any istream
 // Input stream ( >> ) operator;
 // This operator will return an istream.
 friend std::istream& operator >> (std::istream &in, const STRING &right_argument);
@@ -200,84 +188,89 @@ friend std::istream& operator >> (std::istream &in, const STRING &right_argument
 
 
 /**********************************************/
-// Pre:
-// Post:
+// Pre: None
+// Post: Tests for equality between STRINGS and other STRINGs, char*s, or chars.
+//      Case sensitive. STRING == right_argument iff for all i < STRING.length and
+//      right_argument.length, STRING[i] == right_argument[i].
 // Comparison ( == ) operator;
-// (see note below for all comparison operators)
 bool operator == (const STRING &right_argument) const;
-bool operator == (const char* &left_argument) const;
-bool operator == (const char &left_argument) const;
+bool operator == (const char* &right_argument) const;
+bool operator == (const char &right_argument) const;
 /**********************************************/
 
 
 /**********************************************/
-// Pre:
-// Post:
+// Pre: None
+// Post: Tests for inequality between STRINGS and chars, char*s, or other STRINGs.
+//      left_argument != right_argument if there exists any i for which
+//      (right_argument[i] == leftargument[i]) is false or if their lengths are not equal.
 // Comparison ( != ) operator;
 friend bool operator != (const STRING &left_argument, const STRING &right_argument);
 friend bool operator != (const char* &left_argument, const STRING &right_argument);
 friend bool operator != (const STRING &left_argument, const char* &right_argument);\
-//todo
 friend bool operator != (const char &left_argument, const STRING &right_argument);
 friend bool operator != (const STRING &left_argument, const char &right_argument);
 /**********************************************/
 
 
 /**********************************************/
-// Pre:
-// Post:
+// Pre: None
+// Post: Compares STRINGs, chars, and char*s interoperably.
+//      Returns true if left argument comes after right
+//      argument alphabetically.
 // Comparison ( > ) operator;
 friend bool operator > (const STRING &left_argument, const STRING &right_argument);
 friend bool operator > (const char* &left_argument, const STRING &right_argument);
 friend bool operator > (const STRING &left_argument, const char* &right_argument);
-//todo
 friend bool operator > (const char &left_argument, const STRING &right_argument);
 friend bool operator > (const STRING &left_argument, const char &right_argument);
 /**********************************************/
 
 
 /**********************************************/
-// Pre:
-// Post:
+// Pre: None
+// Post: Compares STRINGs, char*s, and chars interoperable.
+//      Returns true if left argument comes before
+//      right argument alphabetically.
 // Comparison ( < ) operator;
 friend bool operator < (const STRING &left_argument, const STRING &right_argument);
 friend bool operator < (const char* &left_argument, const STRING &right_argument);
 friend bool operator < (const STRING &left_argument, const char* &right_argument);
-//todo
 friend bool operator < (const char &left_argument, const STRING &right_argument);
 friend bool operator < (const STRING &left_argument, const char &right_argument);
 /**********************************************/
 
 
 /**********************************************/
-// Pre:
-// Post:
+// Pre: None
+// Post: Returns true if left argument < right argument or
+//      left_argument == right argument
 // Comparison ( <= ) operator;
 friend bool operator <= (const STRING &left_argument, const STRING &right_argument);
 friend bool operator <= (const char* &left_argument, const STRING &right_argument);
 friend bool operator <= (const STRING &left_argument, const char* &right_argument);
-//todo
 friend bool operator <= (const char &left_argument, const STRING &right_argument);
 friend bool operator <= (const STRING &left_argument, const char &right_argument);
 /**********************************************/
 
 
 /**********************************************/
-// Pre:
-// Post:
+// Pre: None
+// Post: Returns true if left argument > right argument or
+//      left_argument == right argument
 // Comparison ( >= ) operator;
 friend bool operator >= (const STRING &left_argument, const STRING &right_argument);
 friend bool operator >= (const char* &left_argument, const STRING &right_argument);
 friend bool operator >= (const STRING &left_argument, const char* &right_argument);
-//todo
 friend bool operator >= (const char &left_argument, const STRING &right_argument);
 friend bool operator >= (const STRING &left_argument, const char &right_argument);
 /**********************************************/
 
 
 /**********************************************/
-// Pre:
-// Post:
+// Pre: None
+// Post: Appends the contents of right_argument (minus trailing null-terminators)
+//      to the contents of the implicit STRING object.
 // Concatenation ( + ) operator;
 STRING operator + (const STRING &right_argument);
 STRING operator + (const char* &right_argument);
@@ -322,7 +315,14 @@ STRING operator + (const char &right_argument);
 
 
 // Helper Functions //
-friend void STRdisplay(const STRING&);
+/**********************************************/
+// Pre: None
+// Post: Displays the contents of s to stdout.
+friend void STRdisplay(const STRING& s);
 
+/**********************************************/
+// Pre: None
+// Post: Return true if STRING.len == 0. If true, memory for contents
+//      has been deallocated and contains garbage.
 bool isEmpty();
 };
