@@ -12,9 +12,11 @@
 
 using namespace std;
 
+// Helper functions
 bool alphaCompare(const STRING& inA, const STRING& inB);
 char upcase(const char &c);
 char downcase(const char &c);
+//
 
 //          Constructors / Destructor               //
 /****************************************************/
@@ -30,22 +32,16 @@ STRING::STRING()
 // STRING.
 STRING::STRING(const char* cstr)
 {
-    unsigned i = 0;
     unsigned cstrLength = 0;
 
-    // Count the characters in cstr to find the minimum amount of memory necessary.
-    while (cstr[i] != '\0')
-    {
-        cstrLength++; i++;
-    }
-    this->contents = new char[cstrLength];
-    this->len = cstrLength;
+    if (cstr != NULL) // Count the characters in cstr to find the minimum amount of memory necessary.
+        for (unsigned i = 0; cstr[i] != '\0'; i++, cstrLength++);
 
-    // Letter by letter assignment
-    for (i = 0; i < cstrLength; i++)
-    {
+    this->len = cstrLength;
+    this->contents = new char[cstrLength];
+       // Letter by letter assignment, shorts if cstrLength is still zero
+    for (unsigned i = 0; i < cstrLength; i++)
         this->contents[i] = cstr[i];
-    }
 }
 
 
@@ -60,23 +56,18 @@ STRING::STRING(const char c)
 
 
 // This constructor will take a STRING and use it to initialize
-// the STRING. This is called the copy constructor.
+// a new STRING. This is called the copy constructor.
 STRING::STRING(const STRING& s)
 {
     this->len = s.len;
     this->contents = new char[s.len];
     for (unsigned i = 0; i < s.len; i++)
-    {
         this->contents[i] = s.contents[i];
-    }
 }
 
 
 // The destructor.
-STRING::~STRING()
-{
-    delete[] contents;
-}
+STRING::~STRING() { delete[] contents; }
 
 
 
@@ -84,10 +75,7 @@ STRING::~STRING()
 /****************************************************/
 
 // This will return the number of characters in the STRING.
-unsigned STRING::length() const
-{
-    return this->len;
-}
+unsigned STRING::length() const { return this->len; }
 
 
 // Assignment ( = ) operator
@@ -106,9 +94,7 @@ STRING& STRING::operator = (const STRING &right_argument)
     this->contents = new char [right_argument.len];
 
     for (unsigned i = 0; i < right_argument.len; i++)
-    {
         this->contents[i] = right_argument.contents[i];
-    }
     this->len = right_argument.len;
     return *this;
 }
@@ -128,12 +114,10 @@ STRING& STRING::operator = (const char &right_argument)
 
 // This will return the position of the first occurrence of char in
 // the STRING as an int. Throws error (1) if the char is not in the STRING.
-int STRING::position(const char c)
+int STRING::position(const char c) const
 {
     for (unsigned i = 0; i <= this->len; i++)
-    {
         if (contents[i] == c) return i;
-    }
     // Character not found.
     throw int(1);
 }
@@ -150,14 +134,14 @@ STRING STRING::operator += (const STRING &right_argument)
     // Copy the left hand argument into a temporary char array
     // so we can delete its contents and reallocate more memory
     for(unsigned i = 0; i < this->len; i++)
-    {
         temp[i] = this->contents[i];
-    }
     delete[] this->contents;
     this->contents = new char[newLength];
 
     unsigned i = 0;
+
     // Copy the first string's contents back in.
+    // Must be a while loop for proper scoping of i.
     while (i < this->len)
     {
         this->contents[i] = temp[i];
@@ -165,9 +149,7 @@ STRING STRING::operator += (const STRING &right_argument)
     }
     // Copy the second string's contents in.
     for (unsigned j = 0; j < right_argument.length(); j++)
-    {
         this->contents[i + j] = right_argument.contents[j];
-    }
 
     this->len = newLength;
     return *this;
@@ -186,11 +168,12 @@ STRING STRING::operator += (const char &right_argument)
 }
 
 
-// Index ( [ ] ) operator{}
+// Index ( [ ] ) operator
 // This operator returns one character through indexing. An
-// error is handled if the index is out of range. This is to be overloaded with a
-// const and non-const version.
-// Bounds checks must be done on these to make sure this index is in range.
+// error is thrown if the index is out of range.
+//
+// Bounds checks are done to make sure the index is in range.
+// The index must be greater than zero and less than the length of the STRING.
 char& STRING::operator [] (const int index)
 {
     if (index >= (int)this->len || index < 0) throw int(1);
@@ -204,22 +187,23 @@ char& STRING::operator [] (const int index) const
 }
 
 
-// This function will change all
-// alphabetic characters to upper case.
-// Functions 11,12, & 13 will work on the character at index first through, but not including, the character at index
-// last. Bounds checks must be done on these to make sure they are in range.
+// This function will change all alphabetic characters to upper case.
+// Works on the character at index first through, but not including, the character at index
+// last.
+//
+// Bounds checks are done to make sure they are in range - the bounds must be less than the lengths
+// of both strings and greater than zero.
 void STRING::upcase(const unsigned first, const unsigned last)
 {
-    for (unsigned i = first; i < last && i <= this->len && i >= 0; i++)
+    for (unsigned i = first; (i < last && i <= this->len) && i >= 0; i++)
     {
         if (this->contents[i] >= 'a' && this->contents[i] <= 'z')
             this->contents[i] &= ('A' - 'a' - 1);
     }
 }
-void STRING::upcase()
-{
-    this->upcase(0, this->len);
-}
+
+void STRING::upcase() { this->upcase(0, this->len); }
+
 char upcase(const char &c)
 {
     char temp = c;
@@ -229,23 +213,20 @@ char upcase(const char &c)
 }
 
 
-// This function will change
-// all alphabetic characters to lower case.
+// This function will change all alphabetic characters to lower case.
 void STRING::downcase(const unsigned first, const unsigned last)
 {
     for (unsigned i = first; i < last && i <= this->len && i >= 0; i++)
     {
         if (this->contents[i] >= 'A' && this->contents[i] <= 'Z')
-        {
             this->contents[i] |= 'a'-'A';
-        }
     }
 }
-void STRING::downcase()
-{
-    this->downcase(0, this->len);
-}
 
+// No arguments - downcases the entire STRING.
+void STRING::downcase() { this->downcase(0, this->len); }
+
+// Downcase a single character. Just in "case"
 char downcase(const char &c)
 {
     char temp = c;
@@ -255,26 +236,22 @@ char downcase(const char &c)
 }
 
 
-// This function will
-// change the case of all alphabetic characters.
+// This function will change the case of all alphabetic characters.
+// Bounds checks are done to ensure the range given is
+// between zero and the lengths of both STRINGS
 void STRING::togglecase(unsigned first, unsigned last)
 {
-    for (unsigned i = first; i < last && i <= this->len && i >= 0; i++)
+    for (unsigned i = first; (i < last && i <= this->len) && i >= 0; i++)
     {
-        if (this->contents[i] >= 'A' && this->contents[i] <= 'Z') // Is it an uppercase letter?
-        {
-            this->contents[i] |= 'a'-'A'; // Send it to lowercase
-        }
-        else if (this->contents[i] >= 'a' && this->contents[i] <= 'z')  // Is it a lowercase letter?
-        {
-            this->contents[i] &= ('A' - 'a' - 1);    // Send it to uppercase
-        }
+        if (this->contents[i] >= 'A' && this->contents[i] <= 'Z')   // Is it an uppercase letter?
+            this->contents[i] |= 'a'-'A';           // Send it to lowercase
+        else                                                        // Must be a lowercase letter.
+            this->contents[i] &= ('A' - 'a' - 1);   // Send it to uppercase
     }
 }
-void STRING::togglecase()
-{
-    this->togglecase(0, this->len);
-}
+
+// If no arguments are given, toggles the entire STRING.
+void STRING::togglecase() { this->togglecase(0, this->len); }
 
 
 //               Comparison / Friend Functions      //
@@ -285,20 +262,20 @@ void STRING::togglecase()
 std::ostream& operator << (ostream &out, const STRING &right_argument)
 {
     for (unsigned i = 0; i < right_argument.len; i++)
-    {
         out << right_argument.contents[i];
-    }
     return out;
 }
 
 
 // Input stream ( >> ) operator{}
 // This operator will return an istream.
-std::istream& operator >> (istream &in, const STRING &right_argument)
+std::istream& operator >> (istream &in, STRING &right_argument)
 {
-    for (unsigned i = 0; i < right_argument.len; i++)
+    char c;
+    while(in.get(c))
     {
-        in >> right_argument.contents[i];
+        if (c == '\n') break;
+        else right_argument += c;   // Automatically handles memory reallocation. Could be slow.
     }
     return in;
 }
@@ -306,23 +283,30 @@ std::istream& operator >> (istream &in, const STRING &right_argument)
 
 // Comparison ( == ) operator{}
 // (see note below for all comparison operators)
-bool STRING::operator == (const STRING &left_argument) const
+bool operator == (const STRING &left_argument, const STRING &right_argument)
 {
-    if  (this->len != left_argument.len) return false;
-    for (unsigned i = 0; i < this->len; i++)
-    {
-        if (this->contents[i] != left_argument.contents[i]) return false;
-    }
+    if  (left_argument.len != right_argument.len) return false;
+    for (unsigned i = 0; i < left_argument.len; i++)
+        if (left_argument.contents[i] != right_argument.contents[i]) return false;
     return true;
 }
-bool STRING::operator == (const char* &left_argument) const
+
+bool operator == (const char* &left_argument, const STRING &right_argument)
 {
-    return (*this == STRING(left_argument));
+    return (STRING(left_argument) == right_argument);
+}
+bool operator == (const char &left_argument, const STRING &right_argument)
+{
+    return (STRING(left_argument) == right_argument);
 }
 
-bool STRING::operator == (const char &left_argument) const
+bool operator == (const STRING &left_argument, const char* &right_argument)
 {
-    return (*this == STRING(left_argument));
+    return (left_argument == STRING(right_argument));
+}
+bool operator == (const STRING &left_argument, const char &right_argument)
+{
+    return (left_argument == STRING(right_argument));
 }
 
 
@@ -487,21 +471,20 @@ STRING STRING::operator + (const STRING &right_argument)
     temp.len = newSTRlen;
 
     for (unsigned i = 0; i < left_arg_length; i++)
-    {
         temp.contents[i] = this->contents[i];
-    }
 
     for (unsigned i = 0; i < right_arg_length; i++)
-    {
         temp.contents[i + left_arg_length] = right_argument.contents[i];
-    }
+
     return temp;
 }
+
 STRING STRING::operator + (const char* &right_argument)
 {
     STRING s1(right_argument);
     return (*this + s1);
 }
+
 STRING STRING::operator + (const char &right_argument)
 {
     STRING s1(right_argument);
@@ -582,15 +565,10 @@ bool alphaCompare(const STRING& inA, const STRING& inB)
 void STRdisplay(const STRING& s)
 {
     for (unsigned i = 0; i < s.len; i++)
-    {
         cout << s.contents[i];
-    }
 }
 
-bool STRING::isEmpty()
-{
-    return (this->len == 0);
-}
+bool STRING::isEmpty() { return (this->len == 0); }
 
 STRING::operator char*()
 {
@@ -604,4 +582,3 @@ STRING::operator char*()
     c[i] = '\0';
     return c;
 }
-

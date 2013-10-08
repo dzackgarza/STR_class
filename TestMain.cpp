@@ -40,6 +40,8 @@ void testNonPrint();
 void testCompare();
 
 void testcharstar();
+void testNullcstr();
+void instreamtest();
 
 int main()
 {
@@ -73,9 +75,38 @@ void runtests()
     testNonPrint();
 
     testCompare();
-    testcharstar();
+    //testcharstar();
+
+    //testNullcstr();
+    //instreamtest();
 }
 
+void instreamtest()
+{
+    char desc[] = "Istream";
+    printTestHeader(desc);
+
+    STRING s;
+    cin >> s;
+    cout << "String now contains '"; STRdisplay(s);
+    cout << "'\n";
+
+    printTestFooter(desc);
+}
+void testNullcstr()
+{
+    char desc[] = "Null Char* Constructor";
+    printTestHeader(desc);
+
+    char* cstr = NULL;
+    if (cstr == NULL) cout << "The contents of the C-String are: \n\t'" << "NULL" << "'.\n";
+    STRING s (cstr);
+    cout << s.length() << endl;
+    cout << "The contents of STRING are: \n\t'"; STRdisplay(s); cout << "'.\n";
+    cout << "Success.\n";
+
+    printTestFooter(desc);
+}
 void testcharstar()
 {
     STRING s1 = "Some text.";
@@ -90,7 +121,7 @@ void testCompare()
 
     STRING s1("a");
     STRING s2("a");
-    s1[0] = 132;
+    //s1[0] = 132;
     cout << "String 1: '" << s1 << "'.\n";
     cout << "String 2: '" << s2 << "'.\n";
     cout << "Is " << s1 << " > " << s2 << "? : " << ((s1 > s2) ? "True" : "False") << ".\n";
@@ -293,7 +324,7 @@ void comparisonOpTest()
 
 void notEqualOpTest()
 {
-    char desc[] = "== Operator";
+    char desc[] = "!= Operator";
     printTestHeader(desc);
 
     STRING s1("This is one string.");

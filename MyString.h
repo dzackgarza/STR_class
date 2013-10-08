@@ -131,7 +131,7 @@ STRING& operator = (const char &right_argument);
 //      the STRING as an int. Throws a positive number if char is not in the STRING.
 
 //out        //in
-int position(const char);
+int position(const char) const;
 /**********************************************/
 
 
@@ -224,7 +224,7 @@ friend std::ostream& operator << (std::ostream &out, const STRING &right_argumen
 // Input stream ( >> ) operator;
 // This operator will return an istream.
 //                                  //inout         //in
-friend std::istream& operator >> (std::istream &in, const STRING &right_argument);
+friend std::istream& operator >> (std::istream &in, STRING &right_argument);
 /**********************************************/
 
 
@@ -235,12 +235,12 @@ friend std::istream& operator >> (std::istream &in, const STRING &right_argument
 //      right_argument.length, STRING[i] == right_argument[i].
 // Comparison ( == ) operator;
 
-                    //in
-bool operator == (const STRING &right_argument) const;
-                    //in
-bool operator == (const char* &right_argument) const;
-                    //in
-bool operator == (const char &right_argument) const;
+// Applies to all:          //in                        //in
+friend bool operator == (const STRING &left_argument, const STRING &right_argument);
+friend bool operator == (const char* &left_argument, const STRING &right_argument);
+friend bool operator == (const STRING &left_argument, const char* &right_argument);
+friend bool operator == (const char &left_argument, const STRING &right_argument);
+friend bool operator == (const STRING &left_argument, const char &right_argument);
 /**********************************************/
 
 
