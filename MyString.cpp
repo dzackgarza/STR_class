@@ -6,7 +6,7 @@
     September 12, 2013
 
 *****************************************************/
-
+// Todo: Add isAlpha
 #include <iostream>
 #include "MyString.h"
 
